@@ -1,0 +1,21 @@
+{
+    "name": "victor/silex",
+    "minimum-stability": "stable",
+    "require": {
+        "silex/silex": "^2.0",
+        "twig/twig": "^1.24",
+        "doctrine/dbal": "~2.2",
+        "components/font-awesome": "^4.6",
+        "gerencianet/gerencianet-sdk-php": "^1.0",
+        "uxweb/sweet-alert": "^1.3",
+        "phpmailer/phpmailer": "^5.2"
+    },
+    "authors": [
+        {
+            "name": "Victor Martins Machado",
+            "email": "victormachado90@gmail.com"
+        }
+    ],
+    "require-dev": {
+    }
+}
