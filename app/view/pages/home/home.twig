@@ -1,0 +1,85 @@
+{% extends "layout/main.twig" %}
+
+{% block style %}
+    <style>
+        @media (max-width: 768px) {
+            .navbar-header img {
+                display: none;
+            }
+        }
+        .navbar-header img {
+            height: 46px;
+            width: 300px;
+        }
+
+        .bsvCor{
+            color: #FFA400 !important;
+        }
+
+        .p-just{
+            text-align: justify;
+        }
+
+        .single-service .fa {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <header id="navigation">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ RAIZ }}home"><h1><img src="{{ RAIZ }}web/images/logo-horizontal.png" alt="logo"></h1></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="scroll active"><a href="#navigation">Home</a></li>
+                        <li class="scroll"><a href="#sobre">Escritório</a></li>
+                        <li class="scroll"><a href="#areas-atuacao">Áreas de atuação</a></li>
+                        <li class="scroll"><a href="#our-team">Advogados</a></li>
+                        <li class="scroll"><a href="#blog">Artigos</a></li>
+                        <li class="scroll"><a href="/#contact">Contato</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div><!--/navbar-->
+    </header> <!--/#navigation-->
+
+    {% include 'pages/home/sections/carrossel.twig' %}
+
+    {% include 'pages/home/sections/sobre.twig' %}
+
+    {% include 'pages/home/sections/areaatuacao.twig' %}
+
+    {% include 'pages/home/sections/time.twig' %}
+
+    {% include 'pages/home/sections/artigos.twig' %}
+
+    {% include 'pages/home/sections/contato.twig' %}
+
+{% endblock %}
+
+{% block jsCode %}
+    <script>
+        $('#contact-form').on('submit', function(){
+            alert('teste');
+        });
+
+        $('#btn-send-contato').click(function(){
+            if(validaForm('contact-form')){
+                $.ajax({
+                    url: "{{ RAIZ }}email",
+                    type: "GET",
+                    success: function(data){
+                        alert(data);
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}
