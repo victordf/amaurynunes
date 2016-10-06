@@ -47,8 +47,33 @@ body {
 	color:#43484E
 }
 
-body  section{
-	padding: 75px 0;
+/*body  section{*/
+	/*padding: 75px 0;*/
+/*}*/
+
+.fundo {
+	background-image: url("../images/bg-img.png");
+	/*background-image: url("../images/fundo1.jpg");*/
+	/*background-size: 100%;*/
+}
+
+section  .topo-section {
+	height: 150px;
+	padding-top: 39px;
+}
+
+section  .marcador::after {
+	display: block;
+	position: absolute;
+	content: '';
+	width: 75px;
+	height: 75px;
+	bottom: -37px;
+	left: 7%;
+	margin-left: -50px;
+	background-image: url('../images/ico/favicon.png');
+	background-size: contain;
+	z-index: 1;
 }
 
 a:hover {
@@ -631,7 +656,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /*@media (min-width: 768px) {*/
 	#areas-atuacao {
-		background-image: url("../images/bg-img.png");
+		/*background-image: url("../images/bg-img.png");*/
+		background-image: url("../images/fundo1.jpg");
 		color: #fff;
 		text-align: center;
 		background-color: #0A0A13;
@@ -702,7 +728,8 @@ h1, h2, h3, h4, h5, h6 {
 =======================*/
 
 #team-carousel {
-	position:relative
+	position:relative;
+	margin-bottom: 40px;
 }
 
 #our-team {
@@ -1082,9 +1109,10 @@ h1, h2, h3, h4, h5, h6 {
 ======================*/
 
 #blog {
-	background-image: url("../images/bg-img.png");
+	/*background-image: url("../images/bg-img.png");*/
+	background-image: url("../images/fundo1.jpg");
 	padding-bottom:75px;
-	padding-top:75px
+	/*padding-top:75px*/
 }
 
 .blog-heading {
