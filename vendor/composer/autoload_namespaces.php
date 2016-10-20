@@ -21,4 +21,5 @@ return array(
     'Contrib\\Bundle' => array($vendorDir . '/satooshi/php-coveralls/src'),
     'CodeClimate\\Component' => array($vendorDir . '/codeclimate/php-test-reporter/src'),
     'CodeClimate\\Bundle' => array($vendorDir . '/codeclimate/php-test-reporter/src'),
+    'App' => array($baseDir . '/app/class'),
 );

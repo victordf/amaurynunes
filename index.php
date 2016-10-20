@@ -53,16 +53,20 @@ $app->get('/', function() use($app){
     ));
 });
 
-$app->get('email', function() use($app, $email){
-    $email->addEmailTo(array('Victor Martins' => 'victormachado90@gmail.com'));
-    $assunto = 'Teste de email';
-    $corpo = 'Bora ver se vai';
-
-    if(!$email->send($assunto, $corpo)){
-        return $email->error;
-    } else {
-        return 'FOI CARAI!';
-    }
+$app->get('admin', function() use ($app){
+    return $app['twig']->render('admin/pages/home.twig');
 });
+
+//$app->get('email', function() use($app, $email){
+//    $email->addEmailTo(array('Victor Martins' => 'victormachado90@gmail.com'));
+//    $assunto = 'Teste de email';
+//    $corpo = 'Bora ver se vai';
+//
+//    if(!$email->send($assunto, $corpo)){
+//        return $email->error;
+//    } else {
+//        return 'FOI CARAI!';
+//    }
+//});
 
 $app->run();
