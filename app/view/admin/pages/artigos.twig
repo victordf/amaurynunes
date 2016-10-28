@@ -1,0 +1,149 @@
+{% extends "admin/layout/main.twig" %}
+
+{% block style %}
+    <style>
+        textarea {
+            margin-right: 0px !important;
+            margin-left: 0px !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Artigos</h1>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-dashboard"></i> Dashboard
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
+                <form method="post" action="{{ RAIZ }}admin/artigos" class="form-horizontal" id="form-artigos" enctype="multipart/form-data">
+                    <input type="hidden" id="id" name="id" value="{{ artigo.id }}">
+                    <div class="form-group">
+                        <label for="" class="control-label col-lg-2">Título</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="titulo" name="titulo" value="{{ artigo.titulo }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-lg-2">Resumo</label>
+                        <div class="col-lg-10">
+                            <textarea name="resumo" id="resumo" class="form-group" cols="105" maxlength="250" rows="5">{{ artigo.resumo }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-lg-2">Arquivo</label>
+                        <div class="col-lg-10">
+                            <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".pdf" value="{{ artigo.arquivo }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="col-lg-2 control-label">Público</label>
+                        <div class="col-lg-10 text-left">
+                            <input type="checkbox" id="publico" name="publico" value="1" {% if artigo.publico %} checked {% endif %}>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 text-center">
+                        <input type="submit" class="btn btn-success" value="Salvar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if artigos != '' %}
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <table class="table table-striped">
+                    <tr>
+                        <th></th>
+                        <th>Título</th>
+                        <th>Resumo</th>
+                        <th>Arquivo</th>
+                        <th>Público</th>
+                    </tr>
+                    {% for a in artigos %}
+                        <tr>
+                            <td>
+                                <button onclick="editarArtigo({{ a.id }})" class="btn btn-success"><i class="fa fa-pencil-square-o"></i></button>
+                                <button onclick="deletaArtigo({{ a.id }})" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </td>
+                            <td>{{ a.titulo }}</td>
+                            <td>{{ a.resumo }}</td>
+                            <td>{{ a.arquivo }}</td>
+                            <td><input type="checkbox" id="publico_{{ a.id }}" name="publico_{{ a.id }}" onclick="marcaPublico({{ a.id }}, this)" {% if a.publico %} checked {% endif %}></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block jsCode %}
+    <script>
+        function editarArtigo(id){
+            window.location.href = "{{ RAIZ }}admin/artigos/"+id;
+        }
+
+        function deletaArtigo(id){
+            swal({
+                title: 'Tem certeza?',
+                text: 'Deseja apagar este artigo?',
+                showCancelButton: true,
+                confirmButtonClass: "btn-success",
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+                closeOnConfirm: false
+            },
+            function(isConfirm){
+                if(isConfirm){
+                    $.ajax({
+                        url: "{{ RAIZ }}admin/artigos/deletar",
+                        type: "POST",
+                        data: {
+                            id: id
+                        },
+                        success: function(data){
+                            swal(data);
+                            window.location.reload();
+                        }
+                    });
+                }
+            });
+        }
+
+        function marcaPublico(id, campo){
+            var publico = '';
+            if(campo.checked){
+                publico = 'true';
+            } else {
+                publico = 'false';
+            }
+            $.ajax({
+                url: "{{ RAIZ }}admin/artigos/publicar",
+                type: "POST",
+                data: {
+                    publico: publico,
+                    id: id
+                },
+                success: function(data){
+                    if(data != '') {
+                        swal(data);
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
