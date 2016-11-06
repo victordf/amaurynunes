@@ -15,6 +15,7 @@ use App\Email;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use App\UserProvider;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
+use Doctrine\DBAL\Exception\ServerException;
 
 require_once 'vendor/autoload.php';
 require_once 'app/class/Email.class.php';
@@ -69,6 +70,27 @@ $app['twig']->addGlobal('RAIZ', '/amaurynunes/');
 $app['twig']->addGlobal('TITLE', 'Amaury Nunes');
 $app['twig']->addGlobal('bgcolor', '#ffffff');
 $app['twig']->addGlobal('username', $app['session']->get('_security.last_username'));
+$app['twig']->addGlobal('ERRO', $app['session']->get('ERRO'));
+
+$app['twig']->addGlobal('userid', $app['session']->get('userid'));
+$app['twig']->addGlobal('username', $app['session']->get('username'));
+
+$app->after(function() use ($app) {
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    if($loged){
+        $email = $token->getUser()->getUsername();
+        $sql = "select id, nome From usuario where email = '{$email}'";
+        $res = $app['db']->fetchAll($sql)[0];
+        $app['session']->set('userid', $res['id']);
+        $app['session']->set('username', $res['nome']);
+    }
+});
+
+$app->before(function() use ($app){
+    // Limpa o erro da sessão
+    $app['session']->set('ERRO', '');
+});
 
 $app->get('/', function() use($app){
     $sql = "select bcrimg, bcrtitulo, bcrprincipal, bcrsubtitulo, bcrtembotao, bcrtxtbotao, bcrfuncbotao from bsv_carrossel";
@@ -77,10 +99,25 @@ $app->get('/', function() use($app){
     $bpc = $app['db']->fetchAll($sql);
     $sql = "select bpcvalor, bpturl, bpttitulo, bptsubtitulo, bptlink From bsv_portfolio bpt inner join bsv_portfolio_categoria bpc on bpc.bpcid = bpt.bpcid";
     $bpt = $app['db']->fetchAll($sql);
+    $sql = <<<DML
+        select 
+            art.id, 
+            art.titulo, 
+            art.resumo, 
+            art.url,
+            date_format(art.datacriacao, '%d/%m/%Y') as datacriacao,
+            usr.nome as username
+        from bsv_artigo art
+        inner join bsv_user usr on art.userid = usr.id
+        where publico = true
+DML;
+
+    $art = $app['db']->fetchAll($sql);
     return $app['twig']->render('pages/home/home.twig', array(
         'carrossel' => $bcr,
         'categoria' => $bpc,
-        'portfolio' => $bpt
+        'portfolio' => $bpt,
+        'artigos'   => $art
     ));
 });
 
@@ -104,7 +141,8 @@ $app->get('admin/artigos', function() use ($app){
             'arquivo' => '',
             'publico' => ''
         ),
-        'artigos' => $artigos
+        'artigos' => $artigos,
+        'MENU' => 'artigos'
     ));
 });
 
@@ -118,7 +156,8 @@ $app->get('admin/artigos/{id}', function($id) use($app){
         'loged'         => $loged,
         'last_username' => $app['session']->get('_security.last_username'),
         'artigo' => $artigo,
-        'artigos' => ''
+        'artigos' => '',
+        'MENU' => 'artigos'
     ));
 });
 
@@ -126,6 +165,7 @@ $app->post('admin/artigos', function(Request $request) use($app){
     $req = $request->request->all();
     $file = $request->files->get('arquivo');
     $publico = empty($req['publico']) ? 'false' : 'true';
+    $userid = $app['session']->get('userid');
 
     if(!empty($file)) {
         $arquivo = $file->getClientOriginalName();
@@ -133,18 +173,18 @@ $app->post('admin/artigos', function(Request $request) use($app){
         $file->move('web/arquivos/artigos/', $file->getClientOriginalName());
     }
     if(empty($req['id'])){
-        $sql = "insert into bsv_artigo (titulo, resumo, arquivo, url, publico) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico})";
+        $sql = "insert into bsv_artigo (titulo, resumo, arquivo, url, publico, userid) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid})";
     } else {
         if(empty($file)) {
             $sql = "update bsv_artigo set titulo = '{$req['titulo']}', resumo = '{$req['resumo']}', publico = {$publico} where id = {$req['id']}";
         } else {
             $sql = "select url from bsv_artigo where id = {$req['id']}";
-            $urlL = $app['db']->fetchAll($sql)[0]['url'];
+            $urlL = $_SERVER['DOCUMENT_ROOT']. $app['db']->fetchAll($sql)[0]['url'];
             unlink($urlL);
             $sql = <<<DML
                 update bsv_artigo set
                     titulo = '{$req['titulo']}',
-                    resumo = '{$req['resumo']}'
+                    resumo = '{$req['resumo']}',
                     publico = {$publico},
                     arquivo = '{$arquivo}',
                     url = '{$url}'
@@ -173,7 +213,7 @@ $app->post('admin/artigos/publicar', function(Request $request) use($app){
             where id = {$req['id']}
 DML;
         $app['db']->exec($sql);
-        return "Estado alterado com sucesso";
+        return "Artigo alterado com sucesso";
     } catch(Exception $e){
         return $e->getMessage();
     }
@@ -215,12 +255,97 @@ $app->get('login', function(Request $request) use ($app){
     ));
 });
 
-$app->get('admin/teste', function() use($app, $encoder){
+$app->get('admin/perfil', function() use($app){
+    $userid = $app['session']->get('userid');
+    $sql = "select * from usuario where id = ".$userid;
+    $dados = $app['db']->fetchAll($sql)[0];
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    return $app['twig']->render('admin/pages/cadastro.twig', array(
+        'bgcolor' => '#F8F8F8',
+        'last_username' => $app['session']->get('_security.last_username'),
+        'loged'         => $loged,
+        'MENU'          => 'perfil',
+        'usuario'       => $dados
+    ));
+});
+
+$app->post('admin/usuario', function(Request $request) use($app, $encoder){
+    try {
+        $req = $request->request->all();
+
+        if(!empty($req['senha'])){
+            $req['senha'] = $encoder->encodePassword($req['senha'], '');
+        } else {
+            unset($req['senha']);
+        }
+
+        if(empty($req['id'])){
+            $app['db']->insert('usuario', $req);
+        } else {
+            $app['db']->update('usuario', $req, array('id' => $req['id']));
+        }
+
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Sucesso',
+            'msg'    => 'Dados salvos com sucesso',
+            'tipo'   => 'success'
+        ));
+    } catch (Exception $e) {
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Erro',
+            'msg' => $e->getMessage(),
+            'tipo' => 'error'
+        ));
+    }
+    return new RedirectResponse("/amaurynunes/admin/perfil");
+});
+
+$app->post('admin/foto', function(Request $request) use($app){
+    try {
+        $req = $request->request->all();
+        $foto = $request->files->get('file');
+        var_dump($foto);
+//die();
+        $dir = __DIR__ . '/web/images/usuarios/';
+        $upFile = $dir . 'foto' . $req['id'] . '.jpg';
+        $bdFile = 'web/images/usuarios/' . 'foto' . $req['id'] . '.jpg';
+        if (move_uploaded_file($foto->getPathname(), $upFile)) {
+            $sql = <<<DML
+                update usuario set
+                    foto = '$bdFile'
+                where id = {$req['id']}
+DML;
+            $app['db']->exec($sql);
+            $app['session']->set('ERRO', array(
+                'titulo' => 'Sucesso',
+                'msg' => 'Foto salva com sucesso',
+                'tipo' => 'success'
+            ));
+        } else {
+            $app['session']->set('ERRO', array(
+                'titulo' => 'Erro',
+                'msg' => 'Erro ao salvar a foto',
+                'tipo' => 'error'
+            ));
+        }
+        return '';
+    } catch (Exception $e){
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Erro',
+            'msg' => $e->getMessage(),
+            'tipo' => 'error'
+        ));
+    }
+});
+
+$app->get('teste', function() use($app, $encoder){
     $nome = 'Victor Martins Machado';
     $email = 'victormachado90@gmail.com';
     //$senha = $app['security.encoder.digest']->encodePassword('v1ct0rm4rt1ns', '');
     $senha = $encoder->encodePassword('v1ct0rm4rt1ns', '');
-    $sql = "insert into bsv_user (nome, email, senha) values ('{$nome}', '{$email}', '{$senha}')";
+    die($senha);
+//    $sql = "insert into usuario (idperfil, nome, email, senha) values (1,'{$nome}', '{$email}', '{$senha}')";
 //    $app['db']->exec($sql);
 //    echo $encoder->encodePassword('foo', 'teste');
 //    echo "<br>";

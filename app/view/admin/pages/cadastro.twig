@@ -1,0 +1,259 @@
+{% extends "admin/layout/main.twig" %}
+
+{% block style %}
+    <style>
+        .panel {
+            margin-top: 150px;
+        }
+
+        #foto {
+            min-width: 142px;
+            min-height: 142px;
+        }
+
+        .img-container{
+            width: 100%;
+
+            text-align: center;
+
+            background-color: #f7f7f7;
+        }
+
+        .img-container {
+            min-height: 200px;
+            max-height: 469px;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .img-container {
+                min-height: 469px;
+            }
+        }
+
+        @media (max-width: 768px){
+            #foto {
+                min-width: 280px !important;
+                min-height: 280px !important;
+            }
+        }
+
+        .img-container > img {
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Dados do usuário</h1>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-user"></i> Perfil
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
+                <div class="col-lg-2 text-center">
+
+                    <style>
+                        .usuario-foto {
+                            position: relative;
+                        }
+
+                        .usuario-foto img {
+                            display: inline !important;
+                        }
+
+                        .usuario-foto button {
+                            position: absolute;
+                            top: 80%;
+                            left: 65%;
+                            border-radius: 50%;
+                        }
+                    </style>
+
+                    <div class="usuario-foto">
+                        <img src="{{ RAIZ }}{{ usuario.foto }}" alt="" id="foto" name="foto" class="img-responsive img-circle">
+                        {#<img src="{{ RAIZ }}web/images/our-team/member1.jpg" alt="" id="foto" name="foto" class="img-responsive img-circle">#}
+                        {#<div class="usuario-foto-acao">#}
+                        <button class="btn btn-success" onclick="abreModal()"><i class="fa fa-edit"></i></button>
+                        {#</div>#}
+                    </div>
+                </div>
+                <form method="post" action="{{ RAIZ }}admin/usuario" class="form-horizontal" id="formulario" enctype="multipart/form-data">
+                    <input type="hidden" id="id" name="id" value="{{ usuario.id }}">
+
+                    <div class="col-lg-10">
+                        <div class="form-group">
+                            <label for="" class="control-label col-lg-2">Nome</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="nome" name="nome" maxlength="50" value="{{ usuario.nome }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nome" class="control-label col-lg-2">Email</label>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <div class="input-group-addon">@</div>
+                                    <input type="email" placeholder="amauryn@exemplo.com.br" class="form-control" id="email" name="email" value="{{ usuario.email }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="senha" class="control-label col-lg-2">Senha</label>
+                            <div class="col-lg-10">
+                                <input type="password" class="form-control" id="senha" name="senha" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cargo" class="control-label col-lg-2">Cargo</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="cargo" name="cargo" value="{{ usuario.cargo }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricao" class="control-label col-lg-2">Descrição</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="descricao" name="descricao" value="{{ usuario.descricao }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="facebook" class="control-label col-lg-2">Facebook</label>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-facebook-square"></i></div>
+                                    <input type="text" class="form-control" id="facebook" name="facebook" value="{{ usuario.facebook }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="linkedin" class="control-label col-lg-2">Linkedin</label>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-linkedin-square"></i></div>
+                                    <input type="text" class="form-control" id="linkedin" name="linkedin" value="{{ usuario.linkedin }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="googlep" class="control-label col-lg-2">Google+</label>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-google-plus"></i></div>
+                                    <input type="text" class="form-control" id="googlep" name="googlep" value="{{ usuario.googlep }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="twitter" class="control-label col-lg-2">Twitter</label>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-twitter-square"></i></div>
+                                    <input type="text" class="form-control" id="twitter" name="twitter" value="{{ usuario.twitter }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12 text-center">
+                                <input type="button" class="btn btn-success" id="btn-salvar" value="Salvar" onclick="salvaForm()">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-foto" class="modal fade" tabindex="-1" role="dialog" >
+        <div class="modal-dialog" role="document" style="width: 830px">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h4 style="float: left;">Selecione uma nova imagem</h4>
+                    <button class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="img-container">
+                            <img src="" alt="" id="foto-modal" name="foto-modal">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="btn btn-success fileinput-button">
+                        <i class="fa fa-plus"></i>
+                        <span>Selecione o arquivo</span>
+                        <input id="fileupload" type="file" name="files" onchange="alteraImg(this)">
+                    </span>
+                    <input type="button" class="btn btn-info" value="Salvar" id="btn-salvar-foto" onclick="salvarFoto()">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block jsCode %}
+    <script>
+        var image = document.getElementById('foto-modal');
+
+        var options = {
+            aspectRatio: 1 / 1,
+            preview: '.img-preview'
+        };
+
+        var cropper = new Cropper(image, options);
+
+        function alteraImg(file){
+            $('#foto-modal').attr('src', window.URL.createObjectURL(file.files[0]));
+            var image = document.getElementById('foto-modal');
+            cropper.destroy();
+            cropper = new Cropper(image, options);
+        }
+
+        function abreModal(){
+            $('#modal-foto').modal('show');
+        }
+
+        function salvarFoto(){
+            cropper.getCroppedCanvas().toBlob(function (blob) {
+                var formData = new FormData();
+                var id = $('#id').val();
+                blob = blob.slice(0,blob.size,'image/jpeg');
+
+                formData.append('file', blob);
+                formData.append('id', id);
+
+                $.ajax('foto', {
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        window.location.reload();
+                    },
+                    error: function () {
+                        console.log('Upload error');
+                    }
+                });
+            });
+        }
+
+        function salvaForm(){
+            $('#formulario').submit();
+        }
+    </script>
+{% endblock %}

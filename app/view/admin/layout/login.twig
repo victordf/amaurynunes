@@ -14,10 +14,6 @@
     <link href="{{ RAIZ }}web/css/plugins/morris.css" rel="stylesheet">
     <link rel='stylesheet' href='{{ RAIZ }}web/css/sweetalert/sweetalert.css' type='text/css' />
 
-    <link rel="stylesheet" href="{{ RAIZ }}web/css/cropper/cropper.min.css">
-
-    <link rel="stylesheet" href="{{ RAIZ }}web/css/uploader/jquery.fileupload.css">
-
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 
@@ -29,7 +25,7 @@
 
     {% block style %}{% endblock %}
 </head><!--/head-->
-<body cz-shortcut-listen="true">
+<body>
     <div class="preloader">
         <div class="preloder-wrap">
             <div class="preloder-inner">
@@ -44,42 +40,7 @@
         </div>
     </div><!--/.preloader-->
 
-    <div id="wrapper">
-
-        {% if loged %}
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">SB Admin</a>
-            </div>
-
-            <ul class="nav navbar-right too-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ username }} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{{ path('admin_logout') }}"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
-            {% include 'admin/layout/menulateral.twig' %}
-
-        </nav>
-        {% endif %}
-
-        <div class="page-wrapper">
-            <div class="container-fluid">
-                {% block body %}{% endblock %}
-            </div>
-        </div>
-    </div>
+    {% block body %}{% endblock %}
 
     <script src="{{ RAIZ }}web/js/admin/jquery.js"></script>
     <script src="{{ RAIZ }}web/js/admin/bootstrap.min.js"></script>
@@ -87,15 +48,6 @@
     <script src="{{ RAIZ }}web/js/admin/plugins/morris/morris.min.js"></script>
     <script src="{{ RAIZ }}web/js/admin/plugins/morris/morris-data.js"></script>
     <script type='text/javascript' src='{{ RAIZ }}web/js/sweetalert/sweetalert.min.js'></script>
-
-    <script src="{{ RAIZ }}web/js/cropper/cropper.min.js"></script>
-
-    <script src="{{ RAIZ }}web/js/uploader/vendor/jquery.ui.widget.js"></script>
-    <script src="{{ RAIZ }}web/js/uploader/jquery.iframe-transport.js"></script>
-    <script src="{{ RAIZ }}web/js/uploader/jquery.fileupload.js"></script>
-
-
-    {% include 'admin/layout/funcoesjs.twig' %}
 
     {% block jsInclude %}{% endblock %}
     {% block jsCode %}{% endblock %}

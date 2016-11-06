@@ -20,7 +20,7 @@ class UserProvider implements UserProviderInterface
 
     public function loadUserByUsername($email)
     {
-        $stmt = $this->conn->executeQuery("SELECT * FROM bsv_user WHERE email = '{$email}'");
+        $stmt = $this->conn->executeQuery("SELECT * FROM usuario WHERE email = '{$email}'");
         if (!$user = $stmt->fetch()) {
             throw new UsernameNotFoundException(sprintf('"%s" não existe.', $email));
         }

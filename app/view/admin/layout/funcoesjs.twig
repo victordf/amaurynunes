@@ -1,0 +1,6 @@
+<script>
+    {% if ERRO != '' %}
+        swal('{{ ERRO.titulo }}', '{{ ERRO.msg }}', '{{ ERRO.tipo }}');
+        {% set ERRO = '' %}
+    {% endif %}
+</script>

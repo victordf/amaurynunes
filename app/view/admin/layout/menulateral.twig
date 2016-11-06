@@ -1,7 +1,6 @@
 <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav side-nav">
-        <li class="active">
-            <a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Artigos</a>
-        </li>
+        <li {% if MENU == 'perfil' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/perfil"><i class="fa fa-user" aria-hidden="true"></i> Perfil</a></li>
+        <li {% if MENU == 'artigos' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/artigos"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Artigos</a>/</li>
     </ul>
 </div>
