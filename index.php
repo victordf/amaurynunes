@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use App\UserProvider;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Doctrine\DBAL\Exception\ServerException;
+use Doctrine\DBAL\Exception\SyntaxErrorException;
 
 require_once 'vendor/autoload.php';
 require_once 'app/class/Email.class.php';
@@ -101,6 +102,24 @@ $app->get('/', function() use($app){
     $bpt = $app['db']->fetchAll($sql);
     $sql = <<<DML
         select 
+            usu.id,
+            usu.nome, 
+            usu.cargo, 
+            usu.descricao, 
+            case
+                when usu.foto is not null then usu.foto
+                else 'web/images/usuarios/padrao.jpg'
+            end as foto, 
+            usu.facebook, 
+            usu.linkedin, 
+            usu.googlep, 
+            usu.twitter
+        from usuario usu 
+        where advogado = true    
+DML;
+    $adv = $app['db']->fetchAll($sql);
+    $sql = <<<DML
+        select 
             art.id, 
             art.titulo, 
             art.resumo, 
@@ -117,7 +136,9 @@ DML;
         'carrossel' => $bcr,
         'categoria' => $bpc,
         'portfolio' => $bpt,
-        'artigos'   => $art
+        'artigos'   => $art,
+        'advogados' => $adv,
+        'cont'      => 5
     ));
 });
 
@@ -305,8 +326,7 @@ $app->post('admin/foto', function(Request $request) use($app){
     try {
         $req = $request->request->all();
         $foto = $request->files->get('file');
-        var_dump($foto);
-//die();
+
         $dir = __DIR__ . '/web/images/usuarios/';
         $upFile = $dir . 'foto' . $req['id'] . '.jpg';
         $bdFile = 'web/images/usuarios/' . 'foto' . $req['id'] . '.jpg';
@@ -337,6 +357,179 @@ DML;
             'tipo' => 'error'
         ));
     }
+});
+
+$app->get('admin/usuarios', function() use($app){
+    $sql = <<<DML
+        select 
+            usu.id,
+            per.nome as perfil,
+            usu.nome, 
+            usu.email, 
+            usu.idperfil, 
+            usu.cargo, 
+            usu.descricao, 
+            usu.foto, 
+            usu.facebook, 
+            usu.linkedin, 
+            usu.googlep, 
+            usu.twitter, 
+            usu.advogado 
+        from usuario usu 
+        inner join perfil per on usu.idperfil = per.id
+DML;
+
+    $usuarios = $app['db']->fetchAll($sql);
+    $sql = "select id, nome from perfil";
+    $perfis = $app['db']->fetchAll($sql);
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    return $app['twig']->render('admin/pages/usuarios.twig', array(
+        'bgcolor' => '#F8F8F8',
+        'loged'         => $loged,
+        'usuarios'      => $usuarios,
+        'usuario'       => '',
+        'perfis'        => $perfis,
+        'MENU'          => 'usuarios',
+    ));
+});
+
+$app->get('admin/usuarios/{id}', function($id) use($app){
+    $sql = <<<DML
+        select 
+            usu.id,
+            per.nome as perfil,
+            usu.nome, 
+            usu.email, 
+            usu.idperfil, 
+            usu.cargo, 
+            usu.descricao, 
+            usu.foto, 
+            usu.facebook, 
+            usu.linkedin, 
+            usu.googlep, 
+            usu.twitter, 
+            usu.advogado 
+        from usuario usu 
+        inner join perfil per on usu.idperfil = per.id
+        where usu.id = {$id}
+DML;
+
+    $usuario = $app['db']->fetchAll($sql)[0];
+    $sql = "select id, nome from perfil";
+    $perfis = $app['db']->fetchAll($sql);
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    return $app['twig']->render('admin/pages/usuarios.twig', array(
+        'bgcolor' => '#F8F8F8',
+        'loged'         => $loged,
+        'usuario'       => $usuario,
+        'usuarios'      => '',
+        'perfis'        => $perfis,
+        'MENU'          => 'usuarios',
+    ));
+});
+
+$app->post('admin/usuarios/publicar',function(Request $request) use($app){
+    $req = $request->request->all();
+    $sql = <<<DML
+        update usuario set
+            advogado = {$req['advogado']}
+        where id = {$req['id']}
+DML;
+    $app['db']->exec($sql);
+});
+
+$app->post('admin/usuarios', function(Request $request) use($app, $encoder){
+    try{
+        $req = $request->request->all();
+
+
+        if(empty($req['id'])) {
+            $senha = $encoder->encodePassword($req['senha'], '');
+            $advogado = array("campo" => '', "valor" => '');
+            if(!empty($req['advogado'])){
+                $advogado['campo'] = 'advogado,';
+                $advogado['valor'] = 'true,';
+            }
+            $sql = <<<DML
+                insert into usuario (
+                    idperfil,
+                    nome,
+                    email,
+                    senha,
+                    cargo,
+                    descricao,
+                    facebook,
+                    linkedin,
+                    googlep,
+                    {$advogado['campo']}
+                    twitter
+                ) values (
+                    {$req['idperfil']},
+                    '{$req['nome']}',
+                    '{$req['email']}',
+                    '{$senha}',
+                    '{$req['cargo']}',
+                    '{$req['descricao']}',
+                    '{$req['facebook']}',
+                    '{$req['linkedin']}',
+                    '{$req['googlep']}',
+                    {$advogado['valor']}
+                    '{$req['twitter']}'
+                )
+DML;
+        } else {
+            $upd = '';
+            if(!empty($req['senha'])){
+                $senha = $encoder->encodePassword($req['senha'], '');
+                $upd = "senha = '{$senha}',";
+            }
+            $advogado = "";
+            if(!empty($req['advogado'])){
+                $advogado = "advogado = true,";
+            }
+            $sql = <<<DML
+                update usuario set
+                    idperfil = {$req['idperfil']},
+                    nome = '{$req['nome']}',
+                    email = '{$req['email']}',
+                    {$upd}
+                    cargo = '{$req['cargo']}',
+                    descricao = '{$req['descricao']}', 
+                    facebook = '{$req['facebook']}',
+                    linkedin = '{$req['linkedin']}',
+                    googlep = '{$req['googlep']}',
+                    {$advogado}
+                    twitter = '{$req['twitter']}'
+                where id = {$req['id']}
+DML;
+
+        }
+
+        try {
+            $app['db']->exec($sql);
+        } catch (SyntaxErrorException $e){
+            $app['session']->set('ERRO', array(
+                'titulo' => 'Erro',
+                'msg' => $e->getMessage(),
+                'tipo' => 'error'
+            ));
+        }
+
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Sucesso',
+            'msg' => 'Usuário salvo com sucesso',
+            'tipo' => 'success'
+        ));
+    } catch (Exception $e){
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Erro',
+            'msg' => $e->getMessage(),
+            'tipo' => 'error'
+        ));
+    }
+    return new RedirectResponse("/amaurynunes/admin/usuarios");
 });
 
 $app->get('teste', function() use($app, $encoder){

@@ -1,0 +1,297 @@
+{% extends "admin/layout/main.twig" %}
+
+{% block style %}
+    <style>
+        .img-container{
+            width: 100%;
+
+            text-align: center;
+
+            background-color: #f7f7f7;
+        }
+
+        .img-container {
+            min-height: 200px;
+            max-height: 469px;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .img-container {
+                min-height: 469px;
+            }
+        }
+
+        .img-container > img {
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Cadastro de usuários</h1>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-users"></i> Usuários
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
+                <form method="post" action="{{ RAIZ }}admin/usuarios" class="form-horizontal" id="formulario" enctype="multipart/form-data">
+                    <input type="hidden" id="id" name="id" value="{% if usuario != '' %}{{ usuario.id }}{% endif %}">
+                    <div class="form-group">
+                        <label for="nome" class="control-label col-lg-2">Nome:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="nome" name="nome" value="{% if usuario != '' %}{{ usuario.nome }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="control-label col-lg-2">Email:</label>
+                        <div class="col-lg-10">
+                            <input type="email" class="form-control" id="email" name="email" maxlength="255" value="{% if usuario != '' %}{{ usuario.email }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha" class="control-label col-lg-2">Senha:</label>
+                        <div class="col-lg-10">
+                            <input type="password" class="form-control" id="senha" name="senha">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cargo" class="control-label col-lg-2">Cargo:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="cargo" name="cargo" value="{% if usuario != '' %}{{ usuario.cargo }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idperfil" class="control-label col-lg-2">Perfil</label>
+                        <div class="col-lg-10">
+                            <select name="idperfil" id="idperfil" class="form-control">
+                                <option value="">Selecione</option>
+                                {% for perfil in perfis %}
+                                    <option value="{{ perfil.id }}" {% if usuario != '' %}{% if usuario.idperfil == perfil.id %}selected{% endif %}{% endif %}>{{ perfil.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descricao" class="control-label col-lg-2">Descrição:</label>
+                        <div class="col-lg-10">
+                            <textarea name="descricao" id="descricao" rows="5" class="form-control">{% if usuario != '' %}{{ usuario.descricao }}{% endif %}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="facebook" class="control-label col-lg-2">Facebook</label>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-facebook-square"></i></div>
+                                <input type="text" class="form-control" id="facebook" name="facebook" value="{% if usuario != '' %}{{ usuario.facebook }}{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="linkedin" class="control-label col-lg-2">Linkedin</label>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-linkedin-square"></i></div>
+                                <input type="text" class="form-control" id="linkedin" name="linkedin" value="{% if usuario != '' %}{{ usuario.linkedin }}{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="googlep" class="control-label col-lg-2">Google+</label>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-google-plus"></i></div>
+                                <input type="text" class="form-control" id="googlep" name="googlep" value="{% if usuario != '' %}{{ usuario.googlep }}{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="twitter" class="control-label col-lg-2">Twitter</label>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-twitter-square"></i></div>
+                                <input type="text" class="form-control" id="twitter" name="twitter" value="{% if usuario != '' %}{{ usuario.twitter }}{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="advogado" class="control-label col-lg-2">Visível no site</label>
+                        <div class="col-lg-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="advogado" name="advogado">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-12 text-center">
+                            <input type="submit" maxlength="255" class="btn btn-success" id="btn-salvar" value="Salvar">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-foto" class="modal fade" tabindex="-1" role="dialog" >
+        <div class="modal-dialog" role="document" style="width: 830px">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h4 style="float: left;">Selecione uma nova imagem</h4>
+                    <button class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="img-container">
+                            <input type="hidden" id="idFoto" name="idFoto" value="">
+                            <img src="" alt="" id="foto-modal" name="foto-modal">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="btn btn-success fileinput-button">
+                        <i class="fa fa-plus"></i>
+                        <span>Selecione o arquivo</span>
+                        <input id="fileupload" type="file" name="files" onchange="alteraImg(this)">
+                    </span>
+                    <input type="button" class="btn btn-info" value="Salvar" id="btn-salvar-foto" onclick="salvarFoto()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if usuarios != '' %}
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-striperd table-hover">
+                    <tr>
+                        <th></th>
+                        <th width="300">Nome</th>
+                        <th width="300">Email</th>
+                        <th>Cargo</th>
+                        <th>Descrição</th>
+                        <th>Perfil</th>
+                        <th>Facebook</th>
+                        <th>LinkedIN</th>
+                        <th>Google+</th>
+                        <th>Twitter</th>
+                        <th></th>
+                    </tr>
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <th>
+                                <button class="btn btn-success" id="btn-editar" onclick="editaUsuario({{ usuario.id }})"><i class="fa fa-pencil-square-o"></i></button>
+                                <button class="btn btn-warning" id="btn-foto" onclick="abreModal({{ usuario.id }})"><i class="fa fa-camera"></i></button>
+                            </th>
+                            <td>{{ usuario.nome }}</td>
+                            <td>{{ usuario.email }}</td>
+                            <td>{{ usuario.cargo }}</td>
+                            <td>{{ usuario.descricao }}</td>
+                            <td>{{ usuario.perfil }}</td>
+                            <td>{{ usuario.facebook }}</td>
+                            <td>{{ usuario.linkedin }}</td>
+                            <td>{{ usuario.googlep }}</td>
+                            <td>{{ usuario.twitter }}</td>
+                            <td>
+                                <input type="checkbox" {% if usuario.advogado == 1 %}checked{% endif %} onclick="visualizarUsuSite(this, {{ usuario.id }})">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block jsCode %}
+    <script>
+        var image = document.getElementById('foto-modal');
+
+        var options = {
+            aspectRatio: 1 / 1,
+            preview: '.img-preview'
+        };
+
+        var cropper = new Cropper(image, options);
+
+        function alteraImg(file){
+            $('#foto-modal').attr('src', window.URL.createObjectURL(file.files[0]));
+            var image = document.getElementById('foto-modal');
+            cropper.destroy();
+            cropper = new Cropper(image, options);
+        }
+
+        function abreModal(id){
+            $('#idFoto').val(id);
+            $('#modal-foto').modal('show');
+        }
+
+        function salvarFoto(){
+            cropper.getCroppedCanvas().toBlob(function (blob) {
+                var formData = new FormData();
+                var id = $('#idFoto').val();
+                blob = blob.slice(0,blob.size,'image/jpeg');
+
+                formData.append('file', blob);
+                formData.append('id', id);
+
+                $.ajax('foto', {
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        window.location.reload();
+                    },
+                    error: function () {
+                        console.log('Upload error');
+                    }
+                });
+            });
+        }
+
+        function editaUsuario(id){
+            window.location.href = "{{ RAIZ }}admin/usuarios/"+id;
+        }
+
+        function visualizarUsuSite(campo, id){
+            var advogado = "";
+            if(campo.checked){
+                advogado = 'true';
+            } else {
+                advogado = 'false';
+            }
+            $.ajax({
+                url: '{{ RAIZ }}admin/usuarios/publicar',
+                type: 'post',
+                data: {
+                    advogado: advogado,
+                    id: id
+                },
+                success: function(data){
+
+                }
+            });
+        }
+    </script>
+{% endblock %}

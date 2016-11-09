@@ -825,7 +825,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .member-left, .member-right {
 	position:absolute;
-	top:-43px;
+	/*top:-43px;*/
+	top: 115px;
 	color:#43484E
 }
 
