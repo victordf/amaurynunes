@@ -2,11 +2,9 @@
     <div class="home-pattern"></div>
     <div id="main-carousel" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-            <li data-target="#main-carousel" data-slide-to="0" class="active"></li>
-            <li data-target="#main-carousel" data-slide-to="1"></li>
-            <li data-target="#main-carousel" data-slide-to="2"></li>
-            <li data-target="#main-carousel" data-slide-to="3"></li>
-            <li data-target="#main-carousel" data-slide-to="4"></li>
+            {% for bcr in carrossel %}
+                <li data-target="#main-carousel" data-slide-to="0" {% if bcr.bcrprincipal != 0 %}class="active"{% endif %}"></li>
+            {% endfor %}
         </ol><!--/.carousel-indicators-->
         <div class="carousel-inner">
             {% for bcr in carrossel %}

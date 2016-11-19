@@ -323,29 +323,40 @@ $app->post('admin/usuario', function(Request $request) use($app, $encoder){
 });
 
 $app->post('admin/foto', function(Request $request) use($app){
+    // Report all PHP errors (see changelog)
+    error_reporting(E_ALL);
     try {
         $req = $request->request->all();
         $foto = $request->files->get('file');
-
+var_dump($foto);
+        die();
         $dir = __DIR__ . '/web/images/usuarios/';
         $upFile = $dir . 'foto' . $req['id'] . '.jpg';
         $bdFile = 'web/images/usuarios/' . 'foto' . $req['id'] . '.jpg';
-        if (move_uploaded_file($foto->getPathname(), $upFile)) {
-            $sql = <<<DML
+        if (is_writable($dir)) {
+            if (move_uploaded_file($foto->getPathname(), $dir . 'foto' . $req['id'] . '.jpg')) {
+                $sql = <<<DML
                 update usuario set
                     foto = '$bdFile'
                 where id = {$req['id']}
 DML;
-            $app['db']->exec($sql);
-            $app['session']->set('ERRO', array(
-                'titulo' => 'Sucesso',
-                'msg' => 'Foto salva com sucesso',
-                'tipo' => 'success'
-            ));
+                $app['db']->exec($sql);
+                $app['session']->set('ERRO', array(
+                    'titulo' => 'Sucesso',
+                    'msg' => 'Foto salva com sucesso',
+                    'tipo' => 'success'
+                ));
+            } else {
+                $app['session']->set('ERRO', array(
+                    'titulo' => 'Erro',
+                    'msg' => 'Erro ao salvar a foto',
+                    'tipo' => 'error'
+                ));
+            }
         } else {
             $app['session']->set('ERRO', array(
                 'titulo' => 'Erro',
-                'msg' => 'Erro ao salvar a foto',
+                'msg' => 'Diretório não pode ser acessado.',
                 'tipo' => 'error'
             ));
         }

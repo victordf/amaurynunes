@@ -8,35 +8,134 @@
             <a class="member-right" href="#team-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
             <div class="carousel-inner team-members">
 
-                {% for advogado in advogados %}
-                    {% if cont == 5 %}
-                        {% set cont = 0 %}
-                        <div class="row item active">
-                    {% endif %}
-
-                    {% if cont == 4 %}
-                        {% set cont = 0 %}
-                        </div>
-                        <div class="row item">
-                    {% endif %}
-
+                <div class="row item active">
                     <div class="col-sm-6 col-md-3">
                         <div class="single-member">
-                            <img src="{{ RAIZ }}{{ advogado.foto }}" alt="team member" />
-                            <h4>{{ advogado.nome }}</h4>
-                            <h5>{{ advogado.cargo }}</h5>
-                            <p>{{ advogado.descricao }}</p>
+                            <img src="{{ RAIZ }}web/images/time/amaury.png" alt="">
+                            <h4>Jorge Amaury Maia Nunes</h4>
+                            <h5>Sócio Fundador</h5>
                             <div class="socials">
-                                {% if advogado.facebook != '' %}<a href="{{ advogado.facebook }}"><i class="fa fa-facebook"></i></a>{% endif %}
-                                {% if advogado.twitter != '' %}<a href="{{ advogado.twitter }}"><i class="fa fa-twitter"></i></a>{% endif %}
-                                {% if advogado.googlep != '' %}<a href="{{ advogado.googlep }}"><i class="fa fa-google-plus"></i></a>{% endif %}
-                                {% if advogado.linkedin != '' %}<a href="{{ advogado.linkedin }}"><i class="fa fa-linkedin"></i></a>{% endif %}
+
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/tati.png" alt="">
+                            <h4>Tatiana Nunes Valls</h4>
+                            <h5>Sócio</h5>
+                            <div class="socials">
 
-                    {% set cont = cont + 1 %}
-                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/lenda.png" alt="">
+                            <h4>Lenda Tariana Dib Faria Neves</h4>
+                            <h5>Sócio</h5>
+                            <div class="socials">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/fernando.png" alt="">
+                            <h4>Fernando</h4>
+                            <h5>Advogado</h5>
+                            <div class="socials">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row item">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/gustavo.png" alt="">
+                            <h4>Gustavo</h4>
+                            <h5>Advogado</h5>
+                            <div class="socials">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/janaira.png" alt="">
+                            <h4>Janaira</h4>
+                            <h5>Advogado</h5>
+                            <div class="socials">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/lulis.png" alt="">
+                            <h4>Lulis</h4>
+                            <h5>Advogado</h5>
+                            <div class="socials">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/nilsen.png" alt="">
+                            <h4>Nilsen</h4>
+                            <h5>Advogado</h5>
+                            <div class="socials">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row item">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="single-member">
+                            <img src="{{ RAIZ }}web/images/time/renato.png" alt="">
+                            <h4>Renato Massao Takahashi</h4>
+                            <h5>Advogado</h5>
+                            <div class="socials">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {#{% for advogado in advogados %}#}
+                    {#{% if cont == 5 %}#}
+                        {#{% set cont = 0 %}#}
+                        {#<div class="row item active">#}
+                    {#{% endif %}#}
+
+                    {#{% if cont == 4 %}#}
+                        {#{% set cont = 0 %}#}
+                        {#</div>#}
+                        {#<div class="row item">#}
+                    {#{% endif %}#}
+
+                    {#<div class="col-sm-6 col-md-3">#}
+                        {#<div class="single-member">#}
+                            {#<img src="{{ RAIZ }}{{ advogado.foto }}" alt="team member" />#}
+                            {#<h4>{{ advogado.nome }}</h4>#}
+                            {#<h5>{{ advogado.cargo }}</h5>#}
+                            {#<p>{{ advogado.descricao }}</p>#}
+                            {#<div class="socials">#}
+                                {#{% if advogado.facebook != '' %}<a href="{{ advogado.facebook }}"><i class="fa fa-facebook"></i></a>{% endif %}#}
+                                {#{% if advogado.twitter != '' %}<a href="{{ advogado.twitter }}"><i class="fa fa-twitter"></i></a>{% endif %}#}
+                                {#{% if advogado.googlep != '' %}<a href="{{ advogado.googlep }}"><i class="fa fa-google-plus"></i></a>{% endif %}#}
+                                {#{% if advogado.linkedin != '' %}<a href="{{ advogado.linkedin }}"><i class="fa fa-linkedin"></i></a>{% endif %}#}
+                            {#</div>#}
+                        {#</div>#}
+                    {#</div>#}
+
+                    {#{% set cont = cont + 1 %}#}
+                {#{% endfor %}#}
 
             </div>
         </div>
