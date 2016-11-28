@@ -9,6 +9,7 @@
 namespace App;
 
 use PHPMailer;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Email {
 
@@ -40,13 +41,16 @@ class Email {
         $this->setEmailFrom();
     }
 
+
     /**
      * Altera o formato do email, para ser enviado em html ou não.
      *
-     * @param bool $isHtml (Default = false)
+     * @param bool $isHtml
+     * @return $this
      */
     public function setFormato($isHtml = false){
         $this->mailer->isHTML($isHtml);
+        return $this;
     }
 
     /**
@@ -54,9 +58,11 @@ class Email {
      *
      * @param $arquivo
      * @throws phpmailerException
+     * @return $this
      */
     public function addAnexo($arquivo){
         $this->mailer->addAttachment($arquivo);
+        return $this;
     }
 
     /**
@@ -64,15 +70,18 @@ class Email {
      *
      * @param string $email
      * @param string $nome
+     * @return $this
      */
     public function setEmailFrom($email = self::sisEmail, $nome = self::sisNome){
         $this->mailer->setFrom($email, $nome);
+        return $this;
     }
 
     /**
      * Adiciona os emails que irão receber o email enviado.
      *
      * @param array $emails - array(<Nome> => <Email>)
+     * @return $this
      */
     public function addEmailTo($emails = array()){
         if(is_array($emails) && count($emails) > 0){
@@ -80,6 +89,7 @@ class Email {
                 $this->mailer->addAddress($email, $nome);
             }
         }
+        return $this;
     }
 
     /**
@@ -88,18 +98,13 @@ class Email {
      * @param $assunto
      * @param $corpo
      * @return bool
-     * @throws phpmailerException
+     * @return $this
      */
     public function send($assunto, $corpo){
         $this->mailer->Subject = $assunto;
         $this->mailer->Body = $corpo;
         if(!$this->mailer->send()){
-            var_dump($this->mailer->ErrorInfo);
-            die();
-            $this->error = $this->mailer->ErrorInfo;
-            return false;
-        } else {
-            return true;
+            throw new Exception($this->error = $this->mailer->ErrorInfo);
         }
     }
 }

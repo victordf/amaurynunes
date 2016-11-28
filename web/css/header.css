@@ -1,0 +1,56 @@
+/*====================
+======Header CSS=====
+======================*/
+
+.navbar-inverse{
+    background-color: #FDFDFD !important;
+    border-color: #B3B3B3 !important;
+}
+
+#navigation .navbar {
+    background:rgba(255, 255, 255, 0.952941);
+    border-radius: 0;
+    border-bottom: 0;
+    box-shadow: rgba(0, 0, 0, 0.298039) 0px 0px 3px;
+    padding-bottom: 8px;
+}
+
+#navigation .navbar-toggle{
+    margin-top: 20px;
+    background-color: #333;
+}
+
+#navigation .navbar-brand h1{
+    padding: 0;
+    margin: 0;
+}
+
+#navigation .navbar-nav.navbar-right li {
+    padding: 0 1px;
+}
+
+#navigation .navbar-nav.navbar-right {
+    margin-top:28px
+}
+
+#navigation .navbar-nav.navbar-right li a {
+    color: #43484E;
+    font-family: 'Roboto',sans-serif;
+    font-size: 14px;
+    padding: 0;
+    text-transform: uppercase;
+    -webkit-transition: all .9s ease 0s;
+    -moz-transition: all .9s ease 0s;
+    -o-transition: all .9s ease 0s;
+    transition: all .9s ease 0s;
+    padding: 6px 15px;
+}
+
+#navigation .navbar-inverse .navbar-nav  .active  a,
+#navigation .navbar-inverse .navbar-nav  .active  a:focus,
+#navigation .navbar-nav.navbar-right li a:hover {
+    color: #fff;
+    /* ORIGINAL */
+    /*background-color: #fc7700;*/
+    background-color: #49494A;
+}

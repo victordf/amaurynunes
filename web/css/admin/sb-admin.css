@@ -119,10 +119,12 @@ ul.alert-dropdown {
         left: 225px;
         width: 225px;
         margin-left: -225px;
-        border: none;
+        /*border: none;*/
+        border-right: 1px solid #B3B3B3 !important;
         border-radius: 0;
         overflow-y: auto;
-        background-color: #222;
+        /*background-color: #222;*/
+        background-color: #FDFDFD;
         bottom: 0;
         overflow-x: hidden;
         padding-bottom: 40px;
@@ -132,10 +134,31 @@ ul.alert-dropdown {
         width: 225px;
     }
 
+    .nav li a:hover,
+    .dropdown-menu li a:hover,
     .side-nav li a:hover,
     .side-nav li a:focus {
         outline: none;
-        background-color: #000 !important;
+        /*background-color: #000 !important;*/
+        background-color: #878a85 !important;
+    }
+
+    .navbar-right {
+        margin-right: 0px !important;
+    }
+
+    .side-nav>li{
+        /*border-top: 1px solid #93A1A1;*/
+        border-bottom: 1px solid #4c4d4d;
+    }
+
+    .nav>li>a {
+        height: 50px;
+        padding: 14px 15px !important;
+    }
+
+    .dropdown-menu {
+        background-color: #9d9d9d !important;
     }
 }
 
@@ -152,6 +175,14 @@ ul.alert-dropdown {
 
 .side-nav>li>ul>li>a:hover {
     color: #fff;
+}
+
+.nav a, .navbar-nav a, .side-nav a{
+    /*color: #ccc !important;*/
+    /*color: #4c4d4d !important;*/
+    color: #fff !important;
+    /*background-color: #49494A !important;*/
+    background-color: #9d9d9d !important;
 }
 
 /* Flot Chart Containers */

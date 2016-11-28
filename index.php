@@ -560,16 +560,16 @@ $app->get('teste', function() use($app, $encoder){
 //    echo $encoder->encodePassword('foo', 'senha');
 });
 
-//$app->get('email', function() use($app, $email){
-//    $email->addEmailTo(array('Victor Martins' => 'victormachado90@gmail.com'));
-//    $assunto = 'Teste de email';
-//    $corpo = 'Bora ver se vai';
-//
-//    if(!$email->send($assunto, $corpo)){
-//        return $email->error;
-//    } else {
-//        return 'FOI CARAI!';
-//    }
-//});
+$app->get('email', function() use($app, $email){
+    $email->addEmailTo(array('Victor Martins' => 'victormachado90@gmail.com'));
+    $assunto = 'Teste de email';
+    $corpo = 'Bora ver se vai';
+
+    if(!$email->send($assunto, $corpo)){
+        return $email->error;
+    } else {
+        return 'FOI CARAI!';
+    }
+});
 
 $app->run();

@@ -14,6 +14,8 @@
     <link href="{{ RAIZ }}web/css/plugins/morris.css" rel="stylesheet">
     <link rel='stylesheet' href='{{ RAIZ }}web/css/sweetalert/sweetalert.css' type='text/css' />
 
+    <link rel="stylesheet" href="{{ RAIZ }}web/css/header.css">
+
     <link rel="stylesheet" href="{{ RAIZ }}web/css/cropper/cropper.min.css">
 
     <link rel="stylesheet" href="{{ RAIZ }}web/css/uploader/jquery.fileupload.css">
@@ -24,6 +26,10 @@
     <style>
         body {
             background-color: {{ bgcolor }};
+        }
+        .navbar-header img {
+            height: 50px;
+            width: 300px;
         }
     </style>
 
@@ -55,7 +61,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">SB Admin</a>
+                {#<a class="navbar-brand" href="index.html">SB Admin</a>#}
+                <a class="navbar-brand" style="padding: 0px !important; padding-left: 10px !important;" href="{{ RAIZ }}"><img src="{{ RAIZ }}web/images/logo-horizontal.png" alt="logo"></a>
             </div>
 
             <ul class="nav navbar-right too-nav">

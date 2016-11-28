@@ -59,33 +59,6 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="well col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
-                <div class="col-lg-2 text-center">
-
-                    <style>
-                        .usuario-foto {
-                            position: relative;
-                        }
-
-                        .usuario-foto img {
-                            display: inline !important;
-                        }
-
-                        .usuario-foto button {
-                            position: absolute;
-                            top: 80%;
-                            left: 65%;
-                            border-radius: 50%;
-                        }
-                    </style>
-
-                    <div class="usuario-foto">
-                        <img src="{{ RAIZ }}{{ usuario.foto }}" alt="" id="foto" name="foto" class="img-responsive img-circle">
-                        {#<img src="{{ RAIZ }}web/images/our-team/member1.jpg" alt="" id="foto" name="foto" class="img-responsive img-circle">#}
-                        {#<div class="usuario-foto-acao">#}
-                        <button class="btn btn-success" onclick="abreModal()"><i class="fa fa-edit"></i></button>
-                        {#</div>#}
-                    </div>
-                </div>
                 <form method="post" action="{{ RAIZ }}admin/usuario" class="form-horizontal" id="formulario" enctype="multipart/form-data">
                     <input type="hidden" id="id" name="id" value="{{ usuario.id }}">
 
@@ -114,59 +87,59 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="cargo" class="control-label col-lg-2">Cargo</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="cargo" name="cargo" value="{{ usuario.cargo }}">
-                            </div>
-                        </div>
+                        {#<div class="form-group">#}
+                            {#<label for="cargo" class="control-label col-lg-2">Cargo</label>#}
+                            {#<div class="col-lg-10">#}
+                                {#<input type="text" class="form-control" id="cargo" name="cargo" value="{{ usuario.cargo }}">#}
+                            {#</div>#}
+                        {#</div>#}
 
-                        <div class="form-group">
-                            <label for="descricao" class="control-label col-lg-2">Descrição</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="descricao" name="descricao" value="{{ usuario.descricao }}">
-                            </div>
-                        </div>
+                        {#<div class="form-group">#}
+                            {#<label for="descricao" class="control-label col-lg-2">Descrição</label>#}
+                            {#<div class="col-lg-10">#}
+                                {#<input type="text" class="form-control" id="descricao" name="descricao" value="{{ usuario.descricao }}">#}
+                            {#</div>#}
+                        {#</div>#}
 
-                        <div class="form-group">
-                            <label for="facebook" class="control-label col-lg-2">Facebook</label>
-                            <div class="col-lg-10">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-facebook-square"></i></div>
-                                    <input type="text" class="form-control" id="facebook" name="facebook" value="{{ usuario.facebook }}">
-                                </div>
-                            </div>
-                        </div>
+                        {#<div class="form-group">#}
+                            {#<label for="facebook" class="control-label col-lg-2">Facebook</label>#}
+                            {#<div class="col-lg-10">#}
+                                {#<div class="input-group">#}
+                                    {#<div class="input-group-addon"><i class="fa fa-facebook-square"></i></div>#}
+                                    {#<input type="text" class="form-control" id="facebook" name="facebook" value="{{ usuario.facebook }}">#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#</div>#}
 
-                        <div class="form-group">
-                            <label for="linkedin" class="control-label col-lg-2">Linkedin</label>
-                            <div class="col-lg-10">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-linkedin-square"></i></div>
-                                    <input type="text" class="form-control" id="linkedin" name="linkedin" value="{{ usuario.linkedin }}">
-                                </div>
-                            </div>
-                        </div>
+                        {#<div class="form-group">#}
+                            {#<label for="linkedin" class="control-label col-lg-2">Linkedin</label>#}
+                            {#<div class="col-lg-10">#}
+                                {#<div class="input-group">#}
+                                    {#<div class="input-group-addon"><i class="fa fa-linkedin-square"></i></div>#}
+                                    {#<input type="text" class="form-control" id="linkedin" name="linkedin" value="{{ usuario.linkedin }}">#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#</div>#}
 
-                        <div class="form-group">
-                            <label for="googlep" class="control-label col-lg-2">Google+</label>
-                            <div class="col-lg-10">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-google-plus"></i></div>
-                                    <input type="text" class="form-control" id="googlep" name="googlep" value="{{ usuario.googlep }}">
-                                </div>
-                            </div>
-                        </div>
+                        {#<div class="form-group">#}
+                            {#<label for="googlep" class="control-label col-lg-2">Google+</label>#}
+                            {#<div class="col-lg-10">#}
+                                {#<div class="input-group">#}
+                                    {#<div class="input-group-addon"><i class="fa fa-google-plus"></i></div>#}
+                                    {#<input type="text" class="form-control" id="googlep" name="googlep" value="{{ usuario.googlep }}">#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#</div>#}
 
-                        <div class="form-group">
-                            <label for="twitter" class="control-label col-lg-2">Twitter</label>
-                            <div class="col-lg-10">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-twitter-square"></i></div>
-                                    <input type="text" class="form-control" id="twitter" name="twitter" value="{{ usuario.twitter }}">
-                                </div>
-                            </div>
-                        </div>
+                        {#<div class="form-group">#}
+                            {#<label for="twitter" class="control-label col-lg-2">Twitter</label>#}
+                            {#<div class="col-lg-10">#}
+                                {#<div class="input-group">#}
+                                    {#<div class="input-group-addon"><i class="fa fa-twitter-square"></i></div>#}
+                                    {#<input type="text" class="form-control" id="twitter" name="twitter" value="{{ usuario.twitter }}">#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#</div>#}
 
                         <div class="form-group">
                             <div class="col-lg-12 text-center">
