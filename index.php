@@ -32,7 +32,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'      => 'pdo_mysql',
         'host'        => "localhost",
-        'dbname'      => "bsv",
+        'dbname'      => "amaury",
         'user'        => "root",
         'password'    => "123456",
         'charset'     => 'utf8mb4'
@@ -94,11 +94,11 @@ $app->before(function() use ($app){
 });
 
 $app->get('/', function() use($app){
-    $sql = "select bcrimg, bcrtitulo, bcrprincipal, bcrsubtitulo, bcrtembotao, bcrtxtbotao, bcrfuncbotao from bsv_carrossel";
+    $sql = "select bcrimg, bcrtitulo, bcrprincipal, bcrsubtitulo, bcrtembotao, bcrtxtbotao, bcrfuncbotao from carrossel";
     $bcr = $app['db']->fetchAll($sql);
-    $sql = "select bpcdsc, bpcvalor from bsv_portfolio_categoria";
+    $sql = "select bpcdsc, bpcvalor from portfolio_categoria";
     $bpc = $app['db']->fetchAll($sql);
-    $sql = "select bpcvalor, bpturl, bpttitulo, bptsubtitulo, bptlink From bsv_portfolio bpt inner join bsv_portfolio_categoria bpc on bpc.bpcid = bpt.bpcid";
+    $sql = "select bpcvalor, bpturl, bpttitulo, bptsubtitulo, bptlink From portfolio bpt inner join portfolio_categoria bpc on bpc.bpcid = bpt.bpcid";
     $bpt = $app['db']->fetchAll($sql);
     $sql = <<<DML
         select 
@@ -126,8 +126,8 @@ DML;
             art.url,
             date_format(art.datacriacao, '%d/%m/%Y') as datacriacao,
             usr.nome as username
-        from bsv_artigo art
-        inner join bsv_user usr on art.userid = usr.id
+        from artigo art
+        inner join usuario usr on art.userid = usr.id
         where publico = true
 DML;
 
@@ -149,7 +149,7 @@ $app->get('admin', function() use ($app){
 $app->get('admin/artigos', function() use ($app){
     $token = $app['security.token_storage']->getToken();
     $loged = empty($token) ? false : true;
-    $sql = "select id, titulo, resumo, arquivo, publico from bsv_artigo";
+    $sql = "select id, titulo, resumo, arquivo, publico from artigo";
     $artigos = $app['db']->fetchAll($sql);
     return $app['twig']->render('admin/pages/artigos.twig', array(
         'token' => $token,
@@ -170,7 +170,7 @@ $app->get('admin/artigos', function() use ($app){
 $app->get('admin/artigos/{id}', function($id) use($app){
     $token = $app['security.token_storage']->getToken();
     $loged = empty($token) ? false : true;
-    $sql = "select id, titulo, resumo, arquivo, publico from bsv_artigo where id = {$id}";
+    $sql = "select id, titulo, resumo, arquivo, publico from artigo where id = {$id}";
     $artigo = $app['db']->fetchAll($sql)[0];
     return $app['twig']->render('admin/pages/artigos.twig', array(
         'token' => $token,
@@ -194,16 +194,16 @@ $app->post('admin/artigos', function(Request $request) use($app){
         $file->move('web/arquivos/artigos/', $file->getClientOriginalName());
     }
     if(empty($req['id'])){
-        $sql = "insert into bsv_artigo (titulo, resumo, arquivo, url, publico, userid) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid})";
+        $sql = "insert into artigo (titulo, resumo, arquivo, url, publico, userid) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid})";
     } else {
         if(empty($file)) {
-            $sql = "update bsv_artigo set titulo = '{$req['titulo']}', resumo = '{$req['resumo']}', publico = {$publico} where id = {$req['id']}";
+            $sql = "update artigo set titulo = '{$req['titulo']}', resumo = '{$req['resumo']}', publico = {$publico} where id = {$req['id']}";
         } else {
-            $sql = "select url from bsv_artigo where id = {$req['id']}";
+            $sql = "select url from artigo where id = {$req['id']}";
             $urlL = $_SERVER['DOCUMENT_ROOT']. $app['db']->fetchAll($sql)[0]['url'];
             unlink($urlL);
             $sql = <<<DML
-                update bsv_artigo set
+                update artigo set
                     titulo = '{$req['titulo']}',
                     resumo = '{$req['resumo']}',
                     publico = {$publico},
@@ -229,7 +229,7 @@ $app->post('admin/artigos/publicar', function(Request $request) use($app){
             throw new Exception('Artigo não informado');
         }
         $sql = <<<DML
-            update bsv_artigo set
+            update artigo set
                 publico = {$req['publico']}
             where id = {$req['id']}
 DML;
@@ -246,7 +246,7 @@ $app->post('admin/artigos/deletar', function(Request $request) use($app){
         if(empty($req['id'])){
             throw new Exception('Artigo não informado');
         }
-        $sql = "delete from bsv_artigo where id = {$req['id']}";
+        $sql = "delete from artigo where id = {$req['id']}";
         $app['db']->exec($sql);
         return "Artigo deletado com sucesso";
     } catch (Exception $e){
