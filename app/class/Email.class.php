@@ -17,26 +17,31 @@ class Email {
 
     public $error;
 
-    const sisEmail = 'bsvsolucoes@gmail.com';
+    const sisEmail = 'victor@bsvsolucoes.com.br';
     const sisNome  = 'BSV Soluções';
-    const sisPass  = '!@#$5678';
+    const sisPass  = 'bsv.2016df';
 
     /**
      * Email constructor.
      * @param null $user
      * @param null $pass
      */
-    public function __construct($user = null, $pass = null)
-    {
+    public function __construct($user = null, $pass = null){
         $this->mailer = new PHPMailer();
 
         $this->mailer->isSMTP();
-        $this->mailer->Host = 'smtp.gmail.com';
         $this->mailer->SMTPAuth = true;
+        $this->mailer->Host = 'mail.bsvsolucoes.com.br';
         $this->mailer->Username = !empty($user) ? $user : self::sisEmail;
         $this->mailer->Password = !empty($pass) ? $pass : self::sisPass;
-        $this->mailer->SMTPSecure = 'tls';
-        $this->mailer->Port = 587;
+        $this->mailer->SMTPOptions = array (
+            'ssl' => array(
+                'verify_peer'  => false,
+                'verify_peer_name'  => false,
+                'allow_self_signed' => true
+            )
+        );
+        $this->mailer->Port = 25;
         $this->setFormato();
         $this->setEmailFrom();
     }
@@ -103,8 +108,6 @@ class Email {
     public function send($assunto, $corpo){
         $this->mailer->Subject = $assunto;
         $this->mailer->Body = $corpo;
-        if(!$this->mailer->send()){
-            throw new Exception($this->error = $this->mailer->ErrorInfo);
-        }
+        return $this->mailer->send();
     }
 }

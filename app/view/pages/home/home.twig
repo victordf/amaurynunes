@@ -88,11 +88,25 @@
         });
 
         $('#btn-send-contato').click(function(){
+            var nome = $('input[name=name]').val();
+            var email = $('input[name=email]').val();
+            var mensagem = $('#message').val();
+            console.log(mensagem);
             if(validaForm('contact-form')){
                 $.ajax({
                     url: "{{ RAIZ }}email",
-                    type: "GET",
+//                    url: "http://bsvsolucoes.com.br/cgi-sys/formmail.pl",
+                    type: "POST",
+                    data: {
+                        nome: nome,
+                        email: email,
+                        mensagem: mensagem,
+                        recipient: 'victor@bsvsolucoes.com.br',
+                        subject: 'teste',
+                        redirect: 'http://www.bsvsolucoes.com.br/'
+                    },
                     success: function(data){
+                        console.log(data);
                         alert(data);
                     }
                 });

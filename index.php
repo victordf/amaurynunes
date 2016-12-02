@@ -9,18 +9,15 @@
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Gerencianet\Exception\GerencianetException;
-use Gerencianet\Gerencianet;
 use App\Email;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use App\UserProvider;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
-use Doctrine\DBAL\Exception\ServerException;
 use Doctrine\DBAL\Exception\SyntaxErrorException;
 
 require_once 'vendor/autoload.php';
 require_once 'app/class/Email.class.php';
 require_once 'app/class/UserProvider.php';
+require_once 'web/_funcoes.php';
 
 $app = new Application();
 $email = new Email();
@@ -32,10 +29,11 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'      => 'pdo_mysql',
         'host'        => "localhost",
-        'dbname'      => "amaury",
-        'user'        => "root",
-        'password'    => "123456",
+        'dbname'      => "bsvso821_an",
+        'user'        => "bsvso821_an",
+        'password'    => "!@#$5678",
         'charset'     => 'utf8mb4'
+
     )
 ));
 
@@ -49,10 +47,6 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             'pattern' => '^/admin',
             'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
             'logout' => array('logout_path' => '/admin/logout', 'invalidate_session' => true),
-//            'users' => array(
-//                // raw password is foo
-//                'admin' => array('ROLE_ADMIN', '$2y$10$3i9/lVd8UOFIJ6PAMFt8gu3/r5g0qeCJvoSlLCsvMTythye19F77a'),
-//            ),
             'users' => function() use ($app) {
                 return new UserProvider($app['db']);
             },
@@ -67,7 +61,8 @@ $app['twig']->addFunction(new \Twig_SimpleFunction('path', function($url) use ($
     return $app['url_generator']->generate($url);
 }));
 
-$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
+//$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
+$app['twig']->addGlobal('RAIZ', 'http://pjan.bsvsolucoes.com.br/');
 $app['twig']->addGlobal('TITLE', 'Amaury Nunes');
 $app['twig']->addGlobal('bgcolor', '#ffffff');
 $app['twig']->addGlobal('username', $app['session']->get('_security.last_username'));
@@ -143,7 +138,7 @@ DML;
 });
 
 $app->get('admin', function() use ($app){
-    return new RedirectResponse("/amaurynunes/admin/artigos");
+    return new RedirectResponse("/admin/artigos");
 });
 
 $app->get('admin/artigos', function() use ($app){
@@ -190,11 +185,12 @@ $app->post('admin/artigos', function(Request $request) use($app){
 
     if(!empty($file)) {
         $arquivo = $file->getClientOriginalName();
-        $url = "/amaurynunes/web/arquivos/artigos/" . $file->getClientOriginalName();
+        $url = "/web/arquivos/artigos/" . $file->getClientOriginalName();
         $file->move('web/arquivos/artigos/', $file->getClientOriginalName());
     }
     if(empty($req['id'])){
-        $sql = "insert into artigo (titulo, resumo, arquivo, url, publico, userid) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid})";
+        $dataatual = date('Y-m-d H:i:s');
+        $sql = "insert into artigo (titulo, resumo, arquivo, url, publico, userid, datacriacao) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid}, '{$dataatual}')";
     } else {
         if(empty($file)) {
             $sql = "update artigo set titulo = '{$req['titulo']}', resumo = '{$req['resumo']}', publico = {$publico} where id = {$req['id']}";
@@ -216,7 +212,7 @@ DML;
     }
     $res = $app['db']->exec($sql);
 
-    return new RedirectResponse("/amaurynunes/admin/artigos");
+    return new RedirectResponse("/admin/artigos");
 });
 
 $app->post('admin/artigos/publicar', function(Request $request) use($app){
@@ -319,7 +315,7 @@ $app->post('admin/usuario', function(Request $request) use($app, $encoder){
             'tipo' => 'error'
         ));
     }
-    return new RedirectResponse("/amaurynunes/admin/perfil");
+    return new RedirectResponse("/admin/perfil");
 });
 
 $app->post('admin/foto', function(Request $request) use($app){
@@ -540,7 +536,7 @@ DML;
             'tipo' => 'error'
         ));
     }
-    return new RedirectResponse("/amaurynunes/admin/usuarios");
+    return new RedirectResponse("/admin/usuarios");
 });
 
 $app->get('teste', function() use($app, $encoder){
@@ -560,16 +556,67 @@ $app->get('teste', function() use($app, $encoder){
 //    echo $encoder->encodePassword('foo', 'senha');
 });
 
-$app->get('email', function() use($app, $email){
-    $email->addEmailTo(array('Victor Martins' => 'victormachado90@gmail.com'));
-    $assunto = 'Teste de email';
-    $corpo = 'Bora ver se vai';
+$app->post('email', function(Request $request) use($app, $email){
+    $req = $request->request->all();
+    $email->addEmailTo(array('Victor Martins' => $req['recipient']));
+    $assunto = $req['subject'];
+    $corpo = $req['mensagem'];
 
     if(!$email->send($assunto, $corpo)){
         return $email->error;
     } else {
         return 'FOI CARAI!';
     }
+});
+
+$app->get('esqueceu/senha', function() use($app){
+    return $app['twig']->render('admin/pages/esqueceusenha.twig');
+});
+
+$app->post('esqueceu/senha', function(Request $request) use($app, $email, $encoder){
+    $req = $request->request->all();
+    $sql = "select id, nome from usuario where email = '{$req['email']}'";
+    $res = $app['db']->fetchAll($sql)[0];
+    if(!empty($res['id'])){
+        $senha = geraSenha(6,false,true);
+        $pass = $encoder->encodePassword($senha, '');
+        $sql = <<<DML
+            update usuario set
+                senha = '{$pass}'
+            where id = {$res['id']}
+DML;
+        $app['db']->exec($sql);
+        $email->addEmailTo(array($res['nome'] => $req['email']));
+        $email->setFormato(true);
+        $assunto = 'Amaury Nunes - Nova Senha';
+        $corpo = <<<HTML
+            <div>
+                <p>
+                    Sua nova senha de acesso é: {$senha}
+                </p>
+            </div>
+HTML;
+        if(!$email->send($assunto, $corpo)){
+            $app['session']->set('ERRO', array(
+                'titulo' => 'Erro',
+                'msg' => 'Erro ao enviar o email',
+                'tipo' => 'error'
+            ));
+        } else {
+            $app['session']->set('ERRO', array(
+                'titulo' => 'Sucesso',
+                'msg' => "Uma nova senha foi enviada para o seu email",
+                'tipo' => 'success'
+            ));
+        }
+    } else {
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Erro',
+            'msg' => "Email não encontrado",
+            'tipo' => 'error'
+        ));
+    }
+    return new RedirectResponse("/login");
 });
 
 $app->run();
