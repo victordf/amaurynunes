@@ -6,6 +6,10 @@
             margin-right: 0px !important;
             margin-left: 0px !important;
         }
+
+        .hide {
+            display: none;
+        }
     </style>
 {% endblock %}
 
@@ -41,9 +45,24 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="" class="control-label col-lg-2">Tipo de artigo</label>
+                        <div class="col-lg-10">
+                            <input type="radio" name="tipo" value="A" checked> Arquivo
+                            <input type="radio" name="tipo" value="L"> Link
+                        </div>
+                    </div>
+
+                    <div class="form-group div-tipo-artigo" id="divArquivo">
                         <label for="" class="control-label col-lg-2">Arquivo</label>
                         <div class="col-lg-10">
                             <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".pdf" value="{{ artigo.arquivo }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group div-tipo-artigo hide" id="divLink">
+                        <label for="" class="control-label col-lg-2">Site</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" name="link" id="link" placeholder="Cole o endereço do site aqui">
                         </div>
                     </div>
 
@@ -69,7 +88,7 @@
                     <tr>
                         <th></th>
                         <th>Título</th>
-                        <th>Resumo</th>
+                        <th width="600">Resumo</th>
                         <th>Arquivo</th>
                         <th>Público</th>
                     </tr>
@@ -93,6 +112,20 @@
 
 {% block jsCode %}
     <script>
+        $(document).ready(function(){
+            $('input[name=tipo]').on('click', function(){
+                $('.div-tipo-artigo').addClass('hide');
+                switch ($(this).val()){
+                    case 'A':
+                        $('#divArquivo').removeClass('hide');
+                        break;
+                    case 'L':
+                        $('#divLink').removeClass('hide');
+                        break;
+                }
+            });
+        });
+
         function editarArtigo(id){
             window.location.href = "{{ RAIZ }}admin/artigos/"+id;
         }

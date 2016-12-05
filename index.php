@@ -29,9 +29,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'      => 'pdo_mysql',
         'host'        => "localhost",
-        'dbname'      => "bsvso821_an",
-        'user'        => "bsvso821_an",
-        'password'    => "!@#$5678",
+        'dbname'      => "amaury",
+        'user'        => "root",
+        'password'    => "123456",
         'charset'     => 'utf8mb4'
 
     )
@@ -61,8 +61,12 @@ $app['twig']->addFunction(new \Twig_SimpleFunction('path', function($url) use ($
     return $app['url_generator']->generate($url);
 }));
 
-//$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
-$app['twig']->addGlobal('RAIZ', 'http://pjan.bsvsolucoes.com.br/');
+$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
+//$app['twig']->addGlobal('RAIZ', 'http://pjan.bsvsolucoes.com.br/');
+
+define('RAIZ', '/amaurynunes/');
+//define('RAIZ', 'http://pjan.bsvsolucoes.com.br/');
+
 $app['twig']->addGlobal('TITLE', 'Amaury Nunes');
 $app['twig']->addGlobal('bgcolor', '#ffffff');
 $app['twig']->addGlobal('username', $app['session']->get('_security.last_username'));
@@ -120,7 +124,9 @@ DML;
             art.resumo, 
             art.url,
             date_format(art.datacriacao, '%d/%m/%Y') as datacriacao,
-            usr.nome as username
+            usr.nome as username,
+            art.tipoartigo,
+            art.link
         from artigo art
         inner join usuario usr on art.userid = usr.id
         where publico = true
@@ -138,7 +144,7 @@ DML;
 });
 
 $app->get('admin', function() use ($app){
-    return new RedirectResponse("/admin/artigos");
+    return new RedirectResponse(RAIZ."admin/artigos");
 });
 
 $app->get('admin/artigos', function() use ($app){
@@ -182,6 +188,8 @@ $app->post('admin/artigos', function(Request $request) use($app){
     $file = $request->files->get('arquivo');
     $publico = empty($req['publico']) ? 'false' : 'true';
     $userid = $app['session']->get('userid');
+    $link = $req['link'];
+    $tipoartigo = $req['tipo'];
 
     if(!empty($file)) {
         $arquivo = $file->getClientOriginalName();
@@ -190,10 +198,10 @@ $app->post('admin/artigos', function(Request $request) use($app){
     }
     if(empty($req['id'])){
         $dataatual = date('Y-m-d H:i:s');
-        $sql = "insert into artigo (titulo, resumo, arquivo, url, publico, userid, datacriacao) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid}, '{$dataatual}')";
+        $sql = "insert into artigo (titulo, resumo, arquivo, url, publico, userid, datacriacao, link, tipoartigo) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid}, '{$dataatual}', '{$link}', '{$tipoartigo}')";
     } else {
         if(empty($file)) {
-            $sql = "update artigo set titulo = '{$req['titulo']}', resumo = '{$req['resumo']}', publico = {$publico} where id = {$req['id']}";
+            $sql = "update artigo set titulo = '{$req['titulo']}', resumo = '{$req['resumo']}', publico = {$publico}, link = '{$link}', tipoartigo = '{$tipoartigo}' where id = {$req['id']}";
         } else {
             $sql = "select url from artigo where id = {$req['id']}";
             $urlL = $_SERVER['DOCUMENT_ROOT']. $app['db']->fetchAll($sql)[0]['url'];
@@ -204,7 +212,9 @@ $app->post('admin/artigos', function(Request $request) use($app){
                     resumo = '{$req['resumo']}',
                     publico = {$publico},
                     arquivo = '{$arquivo}',
-                    url = '{$url}'
+                    url = '{$url}',
+                    link = '{$link}',
+                    tipoartigo = '{$tipoartigo}'
                 where id = {$req['id']}
 DML;
 
@@ -212,7 +222,7 @@ DML;
     }
     $res = $app['db']->exec($sql);
 
-    return new RedirectResponse("/admin/artigos");
+    return new RedirectResponse(RAIZ."admin/artigos");
 });
 
 $app->post('admin/artigos/publicar', function(Request $request) use($app){
@@ -315,7 +325,7 @@ $app->post('admin/usuario', function(Request $request) use($app, $encoder){
             'tipo' => 'error'
         ));
     }
-    return new RedirectResponse("/admin/perfil");
+    return new RedirectResponse(RAIZ."admin/perfil");
 });
 
 $app->post('admin/foto', function(Request $request) use($app){
@@ -536,7 +546,7 @@ DML;
             'tipo' => 'error'
         ));
     }
-    return new RedirectResponse("/admin/usuarios");
+    return new RedirectResponse(RAIZ."admin/usuarios");
 });
 
 $app->get('teste', function() use($app, $encoder){
@@ -616,7 +626,7 @@ HTML;
             'tipo' => 'error'
         ));
     }
-    return new RedirectResponse("/login");
+    return new RedirectResponse(RAIZ."login");
 });
 
 $app->run();

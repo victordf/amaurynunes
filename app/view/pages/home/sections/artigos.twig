@@ -17,7 +17,7 @@
                             <p>{{ artigo.resumo }}</p>
                         </div>
                         {#<a href="" class="btn btn-primary" data-toggle="modal" data-target="#blog-detail">Leia mais</a>#}
-                        <a href="{{ artigo.url }}" target="_blank" class="btn btn-primary" >Leia mais</a>
+                        <a href="{% if artigo.tipoartigo == 'A' %}{{ artigo.url }}{% else %}{{ artigo.link }}{% endif %}" target="_blank" class="btn btn-primary" >Leia mais</a>
                         {#<input type="button" class="btn btn-primary" onclick="abreArtigo('{{ artigo.url }}')" value="Leia Mais">#}
                     </div>
                 </div>

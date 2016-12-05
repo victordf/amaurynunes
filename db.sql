@@ -108,4 +108,7 @@ create table artigo (
     datacriacao datetime default now(),
     primary key (id),
     foreign key (userid) references usuario(id)
-)
+);
+
+alter table artigo add column link varchar(255);
+alter table artigo add column tipoartigo char(1) default 'A';
