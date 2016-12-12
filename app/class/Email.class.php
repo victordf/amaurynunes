@@ -13,13 +13,13 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Email {
 
-    protected $mailer;
+    public $mailer;
 
     public $error;
 
-    const sisEmail = 'victor@bsvsolucoes.com.br';
-    const sisNome  = 'BSV Soluções';
-    const sisPass  = 'bsv.2016df';
+    const sisEmail = 'contato@amaurynunes.com.br';
+    const sisNome  = 'Contato';
+    const sisPass  = 'NovoCpc01';
 
     /**
      * Email constructor.
@@ -31,7 +31,7 @@ class Email {
 
         $this->mailer->isSMTP();
         $this->mailer->SMTPAuth = true;
-        $this->mailer->Host = 'mail.bsvsolucoes.com.br';
+        $this->mailer->Host = 'smtp.amaurynunes.com.br';
         $this->mailer->Username = !empty($user) ? $user : self::sisEmail;
         $this->mailer->Password = !empty($pass) ? $pass : self::sisPass;
         $this->mailer->SMTPOptions = array (
@@ -41,7 +41,7 @@ class Email {
                 'allow_self_signed' => true
             )
         );
-        $this->mailer->Port = 25;
+        $this->mailer->Port = 587;
         $this->setFormato();
         $this->setEmailFrom();
     }

@@ -6,9 +6,12 @@
  * Time: 17:58
  */
 
+//ini_set('session.save_path',realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../tmp'));
+
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Email;
 use App\UserProvider;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
@@ -23,18 +26,25 @@ $app = new Application();
 $email = new Email();
 $encoder = new BCryptPasswordEncoder(4);
 
-$app['debug'] = true;
+$app['debug'] = false;
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'      => 'pdo_mysql',
-        'host'        => "localhost",
-        'dbname'      => "amaury",
-        'user'        => "root",
-        'password'    => "123456",
-        'charset'     => 'utf8mb4'
-
+        'host'        => "an_sistema.mysql.dbaas.com.br",
+        'dbname'      => "an_sistema",
+        'user'        => "an_sistema",
+        'password'    => "novocpc01"
+//        'charset'     => 'utf8mb4'
     )
+//    'db.options' => array(
+//        'driver'      => 'pdo_mysql',
+//        'host'        => "localhost",
+//        'dbname'      => "amaury",
+//        'user'        => "root",
+//        'password'    => "123456",
+//        'charset'     => 'utf8mb4'
+//    )
 ));
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -61,11 +71,13 @@ $app['twig']->addFunction(new \Twig_SimpleFunction('path', function($url) use ($
     return $app['url_generator']->generate($url);
 }));
 
-$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
-//$app['twig']->addGlobal('RAIZ', 'http://pjan.bsvsolucoes.com.br/');
+//$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
+$app['twig']->addGlobal('RAIZ', '/');
 
-define('RAIZ', '/amaurynunes/');
-//define('RAIZ', 'http://pjan.bsvsolucoes.com.br/');
+//define('RAIZ', '/amaurynunes/');
+define('RAIZ', '/');
+
+define('CONTRUCAO', true);
 
 $app['twig']->addGlobal('TITLE', 'Amaury Nunes');
 $app['twig']->addGlobal('bgcolor', '#ffffff');
@@ -75,16 +87,24 @@ $app['twig']->addGlobal('ERRO', $app['session']->get('ERRO'));
 $app['twig']->addGlobal('userid', $app['session']->get('userid'));
 $app['twig']->addGlobal('username', $app['session']->get('username'));
 
-$app->after(function() use ($app) {
-    $token = $app['security.token_storage']->getToken();
-    $loged = empty($token) ? false : true;
-    if($loged){
-        $email = $token->getUser()->getUsername();
-        $sql = "select id, nome From usuario where email = '{$email}'";
-        $res = $app['db']->fetchAll($sql)[0];
-        $app['session']->set('userid', $res['id']);
-        $app['session']->set('username', $res['nome']);
+$app->error(function(\Exception $e, $code){
+    switch ($e){
+        case $e instanceof NotFoundHttpException:
+            return new RedirectResponse(RAIZ);
+            break;
     }
+});
+
+$app->after(function() use ($app) {
+        $token = $app['security.token_storage']->getToken();
+        $loged = empty($token) ? false : true;
+        if ($loged) {
+            $email = $token->getUser()->getUsername();
+            $sql = "select id, nome From usuario where email = '{$email}'";
+            $res = $app['db']->fetchAll($sql)[0];
+            $app['session']->set('userid', $res['id']);
+            $app['session']->set('username', $res['nome']);
+        }
 });
 
 $app->before(function() use ($app){
@@ -133,14 +153,26 @@ DML;
 DML;
 
     $art = $app['db']->fetchAll($sql);
-    return $app['twig']->render('pages/home/home.twig', array(
-        'carrossel' => $bcr,
-        'categoria' => $bpc,
-        'portfolio' => $bpt,
-        'artigos'   => $art,
-        'advogados' => $adv,
-        'cont'      => 5
-    ));
+    if(!CONTRUCAO) {
+        return $app['twig']->render('pages/home/home.twig', array(
+            'carrossel' => $bcr,
+            'categoria' => $bpc,
+            'portfolio' => $bpt,
+            'artigos'   => $art,
+            'advogados' => $adv,
+            'cont'      => 5
+        ));
+    } else {
+        return $app['twig']->render('pages/construcao.twig');
+    }
+});
+
+$app->get('escritorio', function() use ($app){
+    return new RedirectResponse(RAIZ);
+});
+
+$app->get('construcao', function() use ($app){
+    return $app['twig']->render('pages/construcao.twig');
 });
 
 $app->get('admin', function() use ($app){
@@ -568,7 +600,8 @@ $app->get('teste', function() use($app, $encoder){
 
 $app->post('email', function(Request $request) use($app, $email){
     $req = $request->request->all();
-    $email->addEmailTo(array('Victor Martins' => $req['recipient']));
+//    $email->addEmailTo(array('Victor Martins' => $req['recipient']));
+    $email->addEmailTo(array('Victor Martins' => 'victor@bsvsolucoes.com.br'));
     $assunto = $req['subject'];
     $corpo = $req['mensagem'];
 
@@ -606,17 +639,25 @@ DML;
                 </p>
             </div>
 HTML;
-        if(!$email->send($assunto, $corpo)){
+        try {
+            if (!$email->send($assunto, $corpo)) {
+                $app['session']->set('ERRO', array(
+                    'titulo' => 'Erro',
+                    'msg' => $email->mailer->ErrorInfo,
+                    'tipo' => 'error'
+                ));
+            } else {
+                $app['session']->set('ERRO', array(
+                    'titulo' => 'Sucesso',
+                    'msg' => "Uma nova senha foi enviada para o seu email",
+                    'tipo' => 'success'
+                ));
+            }
+        } catch (phpmailerException $e){
             $app['session']->set('ERRO', array(
                 'titulo' => 'Erro',
-                'msg' => 'Erro ao enviar o email',
+                'msg' => $e->getMessage(),
                 'tipo' => 'error'
-            ));
-        } else {
-            $app['session']->set('ERRO', array(
-                'titulo' => 'Sucesso',
-                'msg' => "Uma nova senha foi enviada para o seu email",
-                'tipo' => 'success'
             ));
         }
     } else {

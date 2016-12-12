@@ -8,7 +8,7 @@
         </ol><!--/.carousel-indicators-->
         <div class="carousel-inner">
             {% for bcr in carrossel %}
-                <div class="item {% if bcr.bcrprincipal != 0 %}active{% endif %}" teste="{{ bcr.bcrimg }}" style="background-image: url({{ RAIZ }}{{ bcr.bcrimg }})">
+                <div class="item {% if bcr.bcrprincipal != 0 %}active{% endif %}" teste="{{ bcr.bcrimg }}" style="max-height: 966px !important; background-image: url({{ RAIZ }}{{ bcr.bcrimg }})">
                     <div class="carousel-caption">
                         <div>
                             <h2 class="heading animated bounceInDown">{{ bcr.bcrtitulo }}</h2>

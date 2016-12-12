@@ -1,0 +1,31 @@
+{% extends "layout/main.twig" %}
+
+{% block style %}
+    <style>
+        body {
+            background-image: url('{{ RAIZ }}web/images/bg-img.png');
+        }
+
+        #footer {
+            display: none;
+        }
+
+        img {
+            margin-top: 130px;
+            height: auto;
+            max-width: 100%;
+            width: 500px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="col-lg-12 text-center">
+        <img src="{{ RAIZ }}web/images/ico/favicon.png" alt="">
+        <h1>Site em construção</h1>
+    </div>
+{% endblock %}
+
+{% block jsCode %}
+{% endblock %}
