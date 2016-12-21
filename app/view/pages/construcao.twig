@@ -10,21 +10,64 @@
             display: none;
         }
 
+        #div-logo{
+            margin-bottom: 20px;
+        }
+
         img {
-            margin-top: 130px;
+            margin-top: 60px;
             height: auto;
-            max-width: 100%;
+            max-width: 498px !important;
             width: 500px;
+        }
+
+        .contact-address{
+            max-height: 320px !important;
+            padding-top: 55px !important;
+        }
+
+        #map iframe {
+            height: 300px !important;
         }
 
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="col-lg-12 text-center">
+    <div class="col-lg-12 text-center" id="div-logo">
         <img src="{{ RAIZ }}web/images/ico/favicon.png" alt="">
         <h1>Site em construção</h1>
     </div>
+    {% include 'pages/home/sections/mapa.twig' %}
+    <div class="contact-details">
+        <div class="pattern"></div>
+        <div class=" text-center clearfix">
+            <div class="col-sm-12">
+                <div class="contact-address">
+                    <address>
+                        <p>
+                            <span>Amaury Nunes<br>
+                            &<br>
+                            Advogados Associados</span>
+                        </p>
+                        <strong>SAUS Quadra 4, Lotes 9/10
+                            <br>Ed. Victoria Office Tower, Salas 729/732
+                            <br>Tel: +55 61 3328-8179 / 3328-5525
+                        </strong><br>
+                        <small>
+                            CEP 70070-938, Brasília-DF, Brasil
+                        </small>
+                    </address>
+                    {#<div class="social-icons">#}
+                        {#<a href="#"><i class="fa fa-facebook"></i></a>#}
+                        {#<a href="#"><i class="fa fa-twitter"></i></a>#}
+                        {#<a href="#"><i class="fa fa-linkedin"></i></a>#}
+                    {#</div>#}
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block jsCode %}

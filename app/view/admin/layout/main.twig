@@ -8,6 +8,7 @@
     <meta name="author" content="">
     <title>{{ TITLE }}</title>
 
+    {#<script src='//cdn.tinymce.com/4/tinymce.min.js'></script>#}
     <link rel="stylesheet" href="{{ RAIZ }}web/css/admin/bootstrap.min.css">
     <link rel="stylesheet" href="{{ RAIZ }}web/css/admin/sb-admin.css">
     <link rel="stylesheet" href="{{ RAIZ }}web/css/font-awesome.min.css">
@@ -22,6 +23,61 @@
 
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+    <script src="{{ RAIZ }}web/js/admin/jquery.js"></script>
+    <script type="text/javascript" src="{{ RAIZ }}web/js/plugins/tinymce/jquery.tinymce.min.js"></script>
+    {#<script type="text/javascript" src="{{ RAIZ }}web/js/plugins/tinymce/tiny_mce_popup.js"></script>#}
+    <script type="text/javascript" src="{{ RAIZ }}web/js/plugins/tinymce/tinymce.min.js"></script>
+
+    <script>
+        tinymce.init({
+            selector: '.editor',
+            language: "pt",
+            height: 500,
+            theme: 'modern',
+            plugins: [
+                'advlist autolink lists link image code charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+            ],
+            toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+            image_advtab: true,
+            templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+            ],
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css'
+            ],
+            image_title: true,
+            automatic_uploads: true,
+            images_upload_url: '{{ RAIZ }}editor/imagem',
+            file_picker_types: 'image',
+            file_picker_callback: function(cb, value, meta){
+                var input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+
+                input.onchange = function() {
+                    var file = this.files[0];
+
+//                    var id = 'blobid' + (new Date()).getTime();
+                    var id = file['name'].split('.')[0];
+                    var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                    var blobInfo = blobCache.create(id, file);
+                    blobCache.add(blobInfo);
+
+                    // call the callback and populate the Title field with the file name
+                    cb(blobInfo.blobUri(), { title: file.name });
+                };
+
+                input.click();
+            }
+        });
+    </script>
 
     <style>
         body {
@@ -88,7 +144,6 @@
         </div>
     </div>
 
-    <script src="{{ RAIZ }}web/js/admin/jquery.js"></script>
     <script src="{{ RAIZ }}web/js/admin/bootstrap.min.js"></script>
     <script src="{{ RAIZ }}web/js/admin/plugins/morris/raphael.min.js"></script>
     {#<script src="{{ RAIZ }}web/js/admin/plugins/morris/morris.min.js"></script>#}

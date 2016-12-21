@@ -112,3 +112,4 @@ create table artigo (
 
 alter table artigo add column link varchar(255);
 alter table artigo add column tipoartigo char(1) default 'A';
+alter table artigo add column texto text;

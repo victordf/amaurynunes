@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative One Page Parallax Template">
+    <meta name="keywords" content="Creative, Onepage, Parallax, HTML5, Bootstrap, Popular, custom, personal, portfolio" />
+    <meta name="author" content="">
+    <title>{{ TITLE }}</title>
+    <link href="{{ RAIZ }}web/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ RAIZ }}web/css/prettyPhoto.css" rel="stylesheet">
+    <link href="{{ RAIZ }}web/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ RAIZ }}web/css/animate.css" rel="stylesheet">
+    <link href="{{ RAIZ }}web/css/main.css" rel="stylesheet">
+    <link href="{{ RAIZ }}web/css/responsive.css" rel="stylesheet">
+    <!--[if lt IE 9]> <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script> <![endif]-->
+    <link rel="shortcut icon" href="{{ RAIZ }}web/images/ico/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ RAIZ }}web/images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ RAIZ }}web/images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ RAIZ }}web/images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="{{ RAIZ }}web/images/ico/apple-touch-icon-57-precomposed.png">
+    <link rel='stylesheet' href='{{ RAIZ }}web/css/sweetalert/sweetalert.css' type='text/css' />
+
+    {% block style %}{% endblock %}
+</head><!--/head-->
+<body>
+<div class="preloader">
+    <div class="preloder-wrap">
+        <div class="preloder-inner">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+        </div>
+    </div>
+</div><!--/.preloader-->
+
+<div class="principal">
+    {% block body %}{% endblock %}
+</div>
+
+<footer id="footer">
+    <div class="container">
+        <div class="text-center">
+            <p>Copyright &copy; 2016 - Feito pela BSV Soluções</p>
+        </div>
+    </div>
+</footer> <!--/#footer-->
+
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/smoothscroll.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.parallax.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/main.js"></script>
+<script type='text/javascript' src='{{ RAIZ }}web/js/sweetalert/sweetalert.min.js'></script>
+
+
+<script>
+    function validaForm(form){
+        $("#"+form+" [required]").each(function(){
+            var campo = $(this);
+            var valor = campo.val();
+            switch (campo.attr('type')){
+                default:
+                case 'text':
+                    if(valor == ''){
+                        swal('O campo \''+campo.attr('name')+'\' é obrigatório.');
+                        return false;
+                    }
+                    break;
+
+                case 'email':
+                    if(valor.indexOf('@') == -1){
+                        swal('Email inválido.');
+                        return false;
+                    }
+                    if(valor == ''){
+                        swal('O campo '+campo.attr('name')+' é obrigatório.');
+                        return false;
+                    }
+                    break;
+
+            }
+        });
+        return true;
+    }
+</script>
+
+{% block jsInclude %}{% endblock %}
+{% block jsCode %}{% endblock %}
+</body>

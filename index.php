@@ -6,7 +6,7 @@
  * Time: 17:58
  */
 
-//ini_set('session.save_path',realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../tmp'));
+ini_set('session.save_path',realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../tmp'));
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,25 +26,25 @@ $app = new Application();
 $email = new Email();
 $encoder = new BCryptPasswordEncoder(4);
 
-$app['debug'] = false;
+$app['debug'] = true;
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-    'db.options' => array(
-        'driver'      => 'pdo_mysql',
-        'host'        => "an_sistema.mysql.dbaas.com.br",
-        'dbname'      => "an_sistema",
-        'user'        => "an_sistema",
-        'password'    => "novocpc01"
-//        'charset'     => 'utf8mb4'
-    )
 //    'db.options' => array(
 //        'driver'      => 'pdo_mysql',
-//        'host'        => "localhost",
-//        'dbname'      => "amaury",
-//        'user'        => "root",
-//        'password'    => "123456",
-//        'charset'     => 'utf8mb4'
+//        'host'        => "an_sistema.mysql.dbaas.com.br",
+//        'dbname'      => "an_sistema",
+//        'user'        => "an_sistema",
+//        'password'    => "novocpc01"
+////        'charset'     => 'utf8mb4'
 //    )
+    'db.options' => array(
+        'driver'      => 'pdo_mysql',
+        'host'        => "localhost",
+        'dbname'      => "amaury",
+        'user'        => "root",
+        'password'    => "123456",
+        'charset'     => 'utf8mb4'
+    )
 ));
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -71,13 +71,13 @@ $app['twig']->addFunction(new \Twig_SimpleFunction('path', function($url) use ($
     return $app['url_generator']->generate($url);
 }));
 
-//$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
-$app['twig']->addGlobal('RAIZ', '/');
+$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
+//$app['twig']->addGlobal('RAIZ', '/');
 
-//define('RAIZ', '/amaurynunes/');
-define('RAIZ', '/');
+define('RAIZ', '/amaurynunes/');
+//define('RAIZ', '/');
 
-define('CONTRUCAO', true);
+define('CONTRUCAO', false);
 
 $app['twig']->addGlobal('TITLE', 'Amaury Nunes');
 $app['twig']->addGlobal('bgcolor', '#ffffff');
@@ -87,11 +87,14 @@ $app['twig']->addGlobal('ERRO', $app['session']->get('ERRO'));
 $app['twig']->addGlobal('userid', $app['session']->get('userid'));
 $app['twig']->addGlobal('username', $app['session']->get('username'));
 
-$app->error(function(\Exception $e, $code){
+$app->error(function(\Exception $e, $code) use($app){
     switch ($e){
         case $e instanceof NotFoundHttpException:
             return new RedirectResponse(RAIZ);
             break;
+//        default:
+//            return $app['twig']->render('pages/construcao.twig');
+//            break;
     }
 });
 
@@ -177,6 +180,53 @@ $app->get('construcao', function() use ($app){
 
 $app->get('admin', function() use ($app){
     return new RedirectResponse(RAIZ."admin/artigos");
+});
+
+$app->get('admin/artigo/cadastro', function() use($app){
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    return $app['twig']->render('admin/pages/artigos/cadastro.twig', [
+        'token' => $token,
+        'loged'         => $loged,
+        'last_username' => $app['session']->get('_security.last_username'),
+        'MENU' => 'artigos'
+    ]);
+});
+
+$app->post('admin/artigo/cadastro', function(Request $request) use($app){
+    $req = $request->request->all();
+    $publico = empty($req['publico']) ? 'false' : 'true';
+    $userid = $app['session']->get('userid');
+    $sql = <<<DML
+        insert into artigo (titulo, resumo, texto, publico, arquivo, url, userid) values (
+            '{$req['titulo']}',
+            '{$req['resumo']}',
+            '{$req['texto']}',
+            {$publico},
+            '',
+            '',
+            {$userid}
+        )
+DML;
+    $app['db']->exec($sql);
+
+    $app['session']->set('ERRO', array(
+        'titulo' => 'Sucesso',
+        'msg'    => 'Artigos salvos com sucesso',
+        'tipo'   => 'success'
+    ));
+
+    return new RedirectResponse(RAIZ."admin/artigo/cadastro");
+});
+
+$app->post('editor/imagem', function(Request $request) use($app){
+    $file = $request->files->get('file');
+
+    $arquivo = $file->getClientOriginalName();
+    $url = RAIZ."web/images/editor/" . $arquivo;
+    $file->move(__DIR__.'/web/images/editor/', $arquivo);
+
+    return $app->json(['location' => $url]);
 });
 
 $app->get('admin/artigos', function() use ($app){

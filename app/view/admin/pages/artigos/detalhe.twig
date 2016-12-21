@@ -1,0 +1,100 @@
+{% extends "layout/main.twig" %}
+
+{% block style %}
+    <style>
+        h2 {
+            padding-bottom: 0px !important;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-header img {
+                display: none;
+            }
+        }
+        .navbar-header img {
+            height: 50px;
+            width: 300px;
+        }
+
+        .bsvCor{
+            color: #FFA400 !important;
+        }
+
+        .p-just{
+            text-align: justify;
+        }
+
+        .single-service .fa {
+            display: none;
+        }
+
+        #contact {
+            height: 880px;
+        }
+
+        .margin-20-top{
+            margin-top: 20px;
+        }
+        .margin-20-bottom{
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <header id="navigation">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ RAIZ }}"><h1><img src="{{ RAIZ }}web/images/logo-horizontal.png" alt="logo"></h1></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="scroll"><a href="#navigation">Artigos</a></li>
+                        <li class="scroll"><a href="#sobre">Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div><!--/navbar-->
+    </header> <!--/#navigation-->
+
+
+
+{% endblock %}
+
+{% block jsCode %}
+    <script>
+        $('#contact-form').on('submit', function(){
+            alert('teste');
+        });
+
+        $('#btn-send-contato').click(function(){
+            var nome = $('input[name=name]').val();
+            var email = $('input[name=email]').val();
+            var mensagem = $('#message').val();
+            console.log(mensagem);
+            if(validaForm('contact-form')){
+                $.ajax({
+                    url: "{{ RAIZ }}email",
+//                    url: "http://bsvsolucoes.com.br/cgi-sys/formmail.pl",
+                    type: "POST",
+                    data: {
+                        nome: nome,
+                        email: email,
+                        mensagem: mensagem,
+                        recipient: 'victor@bsvsolucoes.com.br',
+                        subject: 'teste',
+                        redirect: 'http://www.bsvsolucoes.com.br/'
+                    },
+                    success: function(data){
+                        console.log(data);
+                        alert(data);
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}
