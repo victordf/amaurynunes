@@ -152,7 +152,8 @@ DML;
             art.link
         from artigo art
         inner join usuario usr on art.userid = usr.id
-        where publico = true
+        where publico = true 
+        order by datacriacao desc, id limit 3
 DML;
 
     $art = $app['db']->fetchAll($sql);
@@ -178,6 +179,30 @@ $app->get('construcao', function() use ($app){
     return $app['twig']->render('pages/construcao.twig');
 });
 
+$app->get('artigo', function() use($app){
+    return $app['twig']->render('pages/home/artigo.twig', [
+        'artigo' => [
+            'titulo' => '',
+            'resumo' => '',
+            'texto' => ''
+        ]
+    ]);
+});
+
+$app->get('artigo/{id}', function($id) use($app){
+    $sql = <<<DML
+        select titulo, resumo, texto From artigo where id = {$id}
+DML;
+    $res = $app['db']->fetchAll($sql)[0];
+    return $app['twig']->render('pages/home/artigo.twig', [
+        'artigo' => [
+            'titulo' => $res['titulo'],
+            'resumo' => $res['resumo'],
+            'texto' => $res['texto']
+        ]
+    ]);
+});
+
 $app->get('admin', function() use ($app){
     return new RedirectResponse(RAIZ."admin/artigos");
 });
@@ -189,6 +214,33 @@ $app->get('admin/artigo/cadastro', function() use($app){
         'token' => $token,
         'loged'         => $loged,
         'last_username' => $app['session']->get('_security.last_username'),
+        'artigo' => [
+            'id' => '',
+            'titulo' => '',
+            'resumo' => '',
+            'texto' => ''
+        ],
+        'MENU' => 'artigos'
+    ]);
+});
+
+$app->get('admin/artigo/cadastro/{id}', function($id) use($app){
+    $sql = <<<DML
+        select titulo, resumo, texto From artigo where id = {$id}
+DML;
+    $res = $app['db']->fetchAll($sql)[0];
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    return $app['twig']->render('admin/pages/artigos/cadastro.twig', [
+        'token' => $token,
+        'loged'         => $loged,
+        'last_username' => $app['session']->get('_security.last_username'),
+        'artigo' => [
+            'id' => $id,
+            'titulo' => $res['titulo'],
+            'resumo' => $res['resumo'],
+            'texto' => $res['texto']
+        ],
         'MENU' => 'artigos'
     ]);
 });
@@ -197,7 +249,9 @@ $app->post('admin/artigo/cadastro', function(Request $request) use($app){
     $req = $request->request->all();
     $publico = empty($req['publico']) ? 'false' : 'true';
     $userid = $app['session']->get('userid');
-    $sql = <<<DML
+    $req['texto'] = str_replace('../http:', 'http:', str_replace('../../web/images/editor/', 'http://localhost/amaurynunes/web/images/editor/', $req['texto']));
+    if(empty($req['id'])) {
+        $sql = <<<DML
         insert into artigo (titulo, resumo, texto, publico, arquivo, url, userid) values (
             '{$req['titulo']}',
             '{$req['resumo']}',
@@ -208,6 +262,16 @@ $app->post('admin/artigo/cadastro', function(Request $request) use($app){
             {$userid}
         )
 DML;
+    } else {
+        $sql = <<<DML
+        update artigo set
+            titulo = '{$req['titulo']}',
+            resumo = '{$req['resumo']}',
+            texto = '{$req['texto']}'
+        where id = {$req['id']}
+DML;
+
+    }
     $app['db']->exec($sql);
 
     $app['session']->set('ERRO', array(
@@ -267,44 +331,47 @@ $app->get('admin/artigos/{id}', function($id) use($app){
 
 $app->post('admin/artigos', function(Request $request) use($app){
     $req = $request->request->all();
-    $file = $request->files->get('arquivo');
-    $publico = empty($req['publico']) ? 'false' : 'true';
-    $userid = $app['session']->get('userid');
-    $link = $req['link'];
-    $tipoartigo = $req['tipo'];
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
 
-    if(!empty($file)) {
-        $arquivo = $file->getClientOriginalName();
-        $url = "/web/arquivos/artigos/" . $file->getClientOriginalName();
-        $file->move('web/arquivos/artigos/', $file->getClientOriginalName());
+    $where = [];
+    if(!empty($req['titulo'])){
+        $where[] = "and titulo like '%{$req['titulo']}%'";
     }
-    if(empty($req['id'])){
-        $dataatual = date('Y-m-d H:i:s');
-        $sql = "insert into artigo (titulo, resumo, arquivo, url, publico, userid, datacriacao, link, tipoartigo) values ('{$req['titulo']}', '{$req['resumo']}', '{$arquivo}', '{$url}', {$publico}, {$userid}, '{$dataatual}', '{$link}', '{$tipoartigo}')";
-    } else {
-        if(empty($file)) {
-            $sql = "update artigo set titulo = '{$req['titulo']}', resumo = '{$req['resumo']}', publico = {$publico}, link = '{$link}', tipoartigo = '{$tipoartigo}' where id = {$req['id']}";
-        } else {
-            $sql = "select url from artigo where id = {$req['id']}";
-            $urlL = $_SERVER['DOCUMENT_ROOT']. $app['db']->fetchAll($sql)[0]['url'];
-            unlink($urlL);
-            $sql = <<<DML
-                update artigo set
-                    titulo = '{$req['titulo']}',
-                    resumo = '{$req['resumo']}',
-                    publico = {$publico},
-                    arquivo = '{$arquivo}',
-                    url = '{$url}',
-                    link = '{$link}',
-                    tipoartigo = '{$tipoartigo}'
-                where id = {$req['id']}
+    if(!empty($req['resumo'])){
+        $where[] = "and resumo like '%{$req['resumo']}%'";
+    }
+    if(isset($req['publico'])){
+        $where[] = "and publico = 1";
+    }
+    $whereSQL = implode(' ', $where);
+
+    $sql = <<<DML
+        select
+            id, 
+            titulo, 
+            resumo, 
+            arquivo, 
+            publico
+        from artigo
+        where 1=1
+        {$whereSQL}
 DML;
-
-        }
-    }
-    $res = $app['db']->exec($sql);
-
-    return new RedirectResponse(RAIZ."admin/artigos");
+    $artigos = $app['db']->fetchAll($sql);
+    return $app['twig']->render('admin/pages/artigos.twig', array(
+        'token' => $token,
+        'loged'         => $loged,
+        'last_username' => $app['session']->get('_security.last_username'),
+        'artigo' => array(
+            'id' => '',
+            'titulo' => $req['titulo'],
+            'resumo' => $req['resumo'],
+            'arquivo' => '',
+            'publico' => isset($req['publico']) ? true : false
+        ),
+        'artigos' => $artigos,
+        'MENU' => 'artigos'
+    ));
 });
 
 $app->post('admin/artigos/publicar', function(Request $request) use($app){
