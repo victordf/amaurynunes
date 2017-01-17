@@ -16,10 +16,13 @@ use App\Email;
 use App\UserProvider;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Doctrine\DBAL\Exception\SyntaxErrorException;
+//use App\EscritorioServiceProvider;
 
 require_once 'vendor/autoload.php';
 require_once 'app/class/Email.class.php';
 require_once 'app/class/UserProvider.php';
+require_once 'app/class/Escritorio.class.php';
+require_once 'app/class/Areaatuacao.class.php';
 require_once 'web/_funcoes.php';
 
 $app = new Application();
@@ -115,6 +118,9 @@ $app->before(function() use ($app){
     $app['session']->set('ERRO', '');
 });
 
+$app->mount('admin/escritorio', new \App\EscritorioServiceProvider());
+$app->mount('admin/areaatuacao', new \App\AreaatuacaoServiceProvider());
+
 $app->get('/', function() use($app){
     $sql = "select bcrimg, bcrtitulo, bcrprincipal, bcrsubtitulo, bcrtembotao, bcrtxtbotao, bcrfuncbotao from carrossel";
     $bcr = $app['db']->fetchAll($sql);
@@ -155,8 +161,20 @@ DML;
         where publico = true 
         order by datacriacao desc, id limit 3
 DML;
-
     $art = $app['db']->fetchAll($sql);
+    $arquivo = $_SERVER['DOCUMENT_ROOT'] . RAIZ . 'web/arquivos/escritorio.html';
+    $escritorio = file_get_contents($arquivo);
+    $sql = <<<DML
+        select
+            id,
+            titulo,
+            texto
+        from areaatuacao
+        where status = 'A'
+DML;
+    $areas = $app['db']->fetchAll($sql);
+
+
     if(!CONTRUCAO) {
         return $app['twig']->render('pages/home/home.twig', array(
             'carrossel' => $bcr,
@@ -164,6 +182,8 @@ DML;
             'portfolio' => $bpt,
             'artigos'   => $art,
             'advogados' => $adv,
+            'escritorio'=> $escritorio,
+            'areas'     => $areas,
             'cont'      => 5
         ));
     } else {
