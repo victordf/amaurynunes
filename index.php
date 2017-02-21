@@ -23,6 +23,7 @@ require_once 'app/class/Email.class.php';
 require_once 'app/class/UserProvider.php';
 require_once 'app/class/Escritorio.class.php';
 require_once 'app/class/Areaatuacao.class.php';
+require_once 'app/class/Nossotime.class.php';
 require_once 'web/_funcoes.php';
 
 $app = new Application();
@@ -120,6 +121,7 @@ $app->before(function() use ($app){
 
 $app->mount('admin/escritorio', new \App\EscritorioServiceProvider());
 $app->mount('admin/areaatuacao', new \App\AreaatuacaoServiceProvider());
+$app->mount('admin/nossotime', new \App\NossotimeServiceProvider());
 
 $app->get('/', function() use($app){
     $sql = "select bcrimg, bcrtitulo, bcrprincipal, bcrsubtitulo, bcrtembotao, bcrtxtbotao, bcrfuncbotao from carrossel";
@@ -220,6 +222,29 @@ DML;
             'resumo' => $res['resumo'],
             'texto' => $res['texto']
         ]
+    ]);
+});
+
+$app->get('artigos',function() use($app){
+    $sql = <<<DML
+        select 
+            art.id, 
+            art.titulo, 
+            art.resumo, 
+            art.url,
+            date_format(art.datacriacao, '%d/%m/%Y') as datacriacao,
+            usr.nome as username,
+            art.tipoartigo,
+            art.link
+        from artigo art
+        inner join usuario usr on art.userid = usr.id
+        where publico = true 
+        order by datacriacao desc, id
+DML;
+    $art = $app['db']->fetchAll($sql);
+
+    return $app['twig']->render('pages/artigo/artigos.twig', [
+        'artigos'   => $art
     ]);
 });
 
@@ -439,6 +464,138 @@ $app->get('admin/teste', function() use ($app){
     ));
 });
 
+$app->get('admin/idiomas', function() use($app){
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    $sql = <<<DML
+        select * from idioma order by nome
+DML;
+    $idiomas = $app['db']->fetchAll($sql);
+
+    return $app['twig']->render('admin/pages/idiomas.twig', array(
+        'token' => $token,
+        'loged'         => $loged,
+        'last_username' => $app['session']->get('_security.last_username'),
+        'idiomas'       => $idiomas,
+        'idioma'        => [
+            'id'        => '',
+            'nome'      => '',
+            'imagem'    => ''
+        ],
+        'MENU'          => 'idiomas'
+    ));
+});
+
+$app->delete('admin/idiomas', function(Request $request) use($app){
+    $req = $request->request->all();
+    $sql = <<<DML
+        delete from idiomas where id = {$req['id']}
+DML;
+    $app['db']->exec($sql);
+    return 'Idioma deletado com sucesso';
+});
+
+$app->get('admin/idiomas/{id}', function($id) use($app){
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    $sql = <<<DML
+        select * from idioma where id = {$id}
+DML;
+    $idioma = $app['db']->fetchAll($sql)[0];
+
+    $sql = <<<DML
+        select * from idioma order by nome
+DML;
+    $idiomas = $app['db']->fetchAll($sql);
+
+    return $app['twig']->render('admin/pages/idiomas.twig', array(
+        'token' => $token,
+        'loged'         => $loged,
+        'last_username' => $app['session']->get('_security.last_username'),
+        'idiomas'       => $idiomas,
+        'idioma'        => $idioma,
+        'MENU'          => 'idiomas'
+    ));
+});
+
+$app->post('admin/idiomas', function(Request $request) use($app){
+    try {
+        $req = $request->request->all();
+        $fle = $request->files->get('imagem');
+
+
+        if(empty($req['id'])) {
+            if(!empty($fle)) {
+                $nome = $fle->getClientOriginalName();
+                $dir = RAIZ . 'web/images/idiomas';
+                $dirF = __DIR__ . '/web/images/idiomas';
+                $arquivo = $dir . $nome;
+                $arquivoF = $dirF . $nome;
+
+                if (is_writable($dirF)) {
+                    if (move_uploaded_file($fle->getPathname(), $arquivoF)) {
+                        $sql = <<<DML
+                    insert into idioma (nome, imagem) values ('{$req['nome']}','{$arquivo}')
+DML;
+                        $app['db']->exec($sql);
+                    } else {
+                        throw new Exception('Erro ao salvar o arquivo.');
+                    }
+                } else {
+                    throw new Exception('Diretório inválido');
+                }
+            } else {
+                throw new Exception('Arquivo não informado');
+            }
+        } else {
+            if(!empty($fle)){
+                $nome = $fle->getClientOriginalName();
+                $dir = RAIZ . 'web/images/idiomas';
+                $dirF = __DIR__ . '/web/images/idiomas';
+                $arquivo = $dir . $nome;
+                $arquivoF = $dirF . $nome;
+
+                if (is_writable($dirF)) {
+                    if (move_uploaded_file($fle->getPathname(), $arquivoF)) {
+                        $sql = <<<DML
+                            update idioma set
+                                nome = '{$req['nome']}',
+                                imagem = '{$arquivo}',
+                            where id = {$req['id']}
+DML;
+                        $app['db']->exec($sql);
+                    } else {
+                        throw new Exception('Erro ao salvar o arquivo.');
+                    }
+                } else {
+                    throw new Exception('Diretório inválido');
+                }
+            } else {
+                $sql = <<<DML
+                    update idioma set
+                        nome = '{$req['nome']}'
+                    where id = {$req['id']}
+DML;
+                $app['db']->exec($sql);
+            }
+        }
+
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Idioma salvo com sucesso',
+            'msg' => '',
+            'tipo' => 'success'
+        ));
+
+        return new RedirectResponse(RAIZ."admin/idiomas");
+    } catch (Exception $e){
+        $app['session']->set('ERRO', array(
+            'titulo' => 'Erro',
+            'msg' => $e->getMessage(),
+            'tipo' => 'error'
+        ));
+        return new RedirectResponse(RAIZ."admin/idiomas");
+    }
+});
 
 $app->get('login', function(Request $request) use ($app){
     $token = $app['security.token_storage']->getToken();

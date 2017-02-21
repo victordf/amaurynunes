@@ -113,3 +113,30 @@ create table artigo (
 alter table artigo add column link varchar(255);
 alter table artigo add column tipoartigo char(1) default 'A';
 alter table artigo add column texto text;
+
+create table nossotime (
+    id int auto_increment,
+    nome varchar(200) not null,
+    funcao varchar(200),
+    resumo text,
+    curriculo text,
+    foto varchar(255),
+    primary key(id)
+);
+
+create table idioma (
+    id int auto_increment,
+    nome varchar(100) not null,
+    imagem varchar(255) not null,
+    primary key(id)
+);
+
+select id, nome, imagem from idioma
+
+create table idiomatime (
+    ididioma int not null,
+    idtime int not null,
+    primary key(ididioma, idtime),
+    constraint fk_idioma foreign key (ididioma) references idioma(id),
+    constraint fk_nossotime foreign key (idtime) references nossotime(id)
+);

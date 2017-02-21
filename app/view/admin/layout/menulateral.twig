@@ -2,7 +2,10 @@
     <ul class="nav navbar-nav side-nav">
         <li {% if MENU == 'perfil' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/perfil"><i class="fa fa-user" aria-hidden="true"></i> Perfil</a></li>
         <li {% if MENU == 'escritorio' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/escritorio"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Escritório</a></li>
+        <li {% if MENU == 'areaatuacao' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/areaatuacao"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Área de atuação</a></li>
+        <li {% if MENU == 'time' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/nossotime"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Nosso Time</a></li>
         <li {% if MENU == 'artigos' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/artigos"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Artigos</a></li>
+        <li {% if MENU == 'idiomas' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/idiomas"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Idiomas</a></li>
         <li {% if MENU == 'usuarios' %}class="active"{% endif %}><a href="{{ RAIZ }}admin/usuarios"><i class="fa fa-users" aria-hidden="true"></i> Usuários</a></li>
     </ul>
 </div>
