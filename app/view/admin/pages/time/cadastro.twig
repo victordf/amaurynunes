@@ -36,8 +36,22 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="well col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
-                <form method="post" action="{{ RAIZ }}admin/nossotime/cadastro" class="form-horizontal" id="form-artigos">
+                <form method="post" action="{{ RAIZ }}admin/nossotime/" class="form-horizontal" id="form-artigos">
                     <input type="hidden" id="id" name="id" value="">
+
+                    <div class="form-group">
+                        <label for="" class="col-lg-2 control-label">Nome:</label>
+                        <div class="col-lg-10">
+                            <input type="text" name="nome" id="nome" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="col-lg-2 control-label">Função:</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" name="funcao" id="funcao">
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label for="" class="col-lg-2 control-label">Resumo:</label>
@@ -59,7 +73,7 @@
                             {% for idioma in idiomas %}
                                 {#<button class="btn btn-default idiomas" type="button" data-id="{{ idioma.id }}">#}
                                 <span class="form-control span-idiomas">
-                                    <input type="checkbox" class="chkIdiomas" id="idioma_{{ idioma.id }}" name="idioma[]">
+                                    <input type="checkbox" class="chkIdiomas" value="{{ idioma.id }}" id="idioma_{{ idioma.id }}" name="idioma[]">
                                     {{ idioma.nome }}
                                 </span>
                                 {#</button>#}
