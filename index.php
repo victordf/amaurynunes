@@ -164,6 +164,10 @@ DML;
         order by datacriacao desc, id limit 3
 DML;
     $art = $app['db']->fetchAll($sql);
+    $sql = <<<SQL
+      select * from nossotime
+SQL;
+
     $arquivo = $_SERVER['DOCUMENT_ROOT'] . RAIZ . 'web/arquivos/escritorio.html';
     $escritorio = file_get_contents($arquivo);
     $sql = <<<DML
