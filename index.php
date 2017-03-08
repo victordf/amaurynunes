@@ -82,6 +82,7 @@ define('RAIZ', '/amaurynunes/');
 //define('RAIZ', '/');
 
 define('CONTRUCAO', false);
+define('DIR', __DIR__);
 
 $app['twig']->addGlobal('TITLE', 'Amaury Nunes');
 $app['twig']->addGlobal('bgcolor', '#ffffff');
@@ -90,6 +91,7 @@ $app['twig']->addGlobal('ERRO', $app['session']->get('ERRO'));
 
 $app['twig']->addGlobal('userid', $app['session']->get('userid'));
 $app['twig']->addGlobal('username', $app['session']->get('username'));
+$app['twig']->addGlobal('DIR', __DIR__);
 
 $app->error(function(\Exception $e, $code) use($app){
     switch ($e){
@@ -165,8 +167,17 @@ DML;
 DML;
     $art = $app['db']->fetchAll($sql);
     $sql = <<<SQL
-      select * from nossotime
+        select 
+            id,
+            nome,
+            funcao,
+            resumo,
+            curriculo,
+            foto
+        from nossotime
+        where status = 'A'
 SQL;
+    $not = $app['db']->fetchAll($sql);
 
     $arquivo = $_SERVER['DOCUMENT_ROOT'] . RAIZ . 'web/arquivos/escritorio.html';
     $escritorio = file_get_contents($arquivo);
@@ -190,6 +201,7 @@ DML;
             'advogados' => $adv,
             'escritorio'=> $escritorio,
             'areas'     => $areas,
+            'nossotime' => $not,
             'cont'      => 5
         ));
     } else {
@@ -535,7 +547,6 @@ $app->post('admin/idiomas', function(Request $request) use($app){
                 $dirF = __DIR__ . '/web/images/idiomas';
                 $arquivo = $dir . $nome;
                 $arquivoF = $dirF . $nome;
-
                 if (is_writable($dirF)) {
                     if (move_uploaded_file($fle->getPathname(), $arquivoF)) {
                         $sql = <<<DML

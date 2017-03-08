@@ -41,6 +41,7 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
                     'funcao' => '',
                     'resumo' => '',
                     'curriculo' => '',
+                    'curriculolotes' => '',
                     'foto' => ''
                 ],
                 'tabela'        => $not,
@@ -72,13 +73,14 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
             $file = $request->files->get('foto');
 //            $fle =  $request->files->get('imagem');
 
-            $id        = $req['id'];
-            $nome      = $req['nome'];
-            $funcao    = $req['funcao'];
-            $resumo    = $req['resumo'];
-            $curriculo = $req['curriculo'];
-            $idiomas   = $req['idioma'];
-            $arquivo   = '';
+            $id             = $req['id'];
+            $nome           = $req['nome'];
+            $funcao         = $req['funcao'];
+            $resumo         = $req['resumo'];
+            $curriculo      = $req['curriculo'];
+            $curriculolotes = $req['curriculolotes'];
+            $idiomas        = $req['idioma'];
+            $arquivo        = '';
 
             if (!empty($id)) {
                 $sql = <<<SQL
@@ -86,18 +88,20 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
                         nome = '{$nome}',
                         funcao = '{$funcao}',
                         resumo = '{$resumo}',
-                        curriculo = '{$curriculo}'
+                        curriculo = '{$curriculo}',
+                        curriculolotes = '{curriculolotes}'
                     where id = {$id}
 SQL;
                 $app['db']->exec($sql);
             } else {
 
                 $sql = <<<SQL
-                    insert into nossotime (nome, funcao, resumo, curriculo, foto) values (
+                    insert into nossotime (nome, funcao, resumo, curriculo, curriculolotes, foto) values (
                         '{$nome}',
                         '{$funcao}',
                         '{$resumo}',
                         '{$curriculo}',
+                        '{$curriculolotes}',
                         '{$arquivo}'
                     );
 SQL;
@@ -108,13 +112,13 @@ SQL;
 
             if(!empty($file)){
                 $fotoNome = $file->getClientOriginalName();
-                $dir      = RAIZ . 'web/images/time';
-                $dirF     = __DIR__ . '/web/images/time';
+                $dir      = RAIZ . 'web/images/time/';
+                $dirF     = DIR . '/web/images/time/';
                 $arquivo  = $dir . $fotoNome.'_'.$id;
                 $arquivoF = $dirF . $fotoNome.'_'.$id;
 
-                if(is_writable($dirF)){
-                    if(!move_uploaded_file($file->getPathname(), $arquivoF)){
+                if (is_writable($dirF)) {
+                    if (!move_uploaded_file($file->getPathname(), $arquivoF)) {
                         throw new Exception('Erro ao salvar o arquivo');
                     }
                 } else {
@@ -228,6 +232,7 @@ SQL;
                 funcao,
                 resumo,
                 curriculo,
+                curriculolotes,
                 foto
             from nossotime
             where 1=1
