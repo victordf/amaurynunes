@@ -89,7 +89,7 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
                         funcao = '{$funcao}',
                         resumo = '{$resumo}',
                         curriculo = '{$curriculo}',
-                        curriculolotes = '{curriculolotes}'
+                        curriculolotes = '{$curriculolotes}'
                     where id = {$id}
 SQL;
                 $app['db']->exec($sql);
@@ -111,27 +111,29 @@ SQL;
 
 
             if(!empty($file)){
-                $fotoNome = $file->getClientOriginalName();
+                $fotoExtesao = $file->getClientOriginalExtension();
                 $dir      = RAIZ . 'web/images/time/';
                 $dirF     = DIR . '/web/images/time/';
-                $arquivo  = $dir . $fotoNome.'_'.$id;
-                $arquivoF = $dirF . $fotoNome.'_'.$id;
+                $arquivo  = $dir . 'foto_time_'.$id.'.'.$fotoExtesao;
+                $arquivoF = $dirF . 'foto_time_'.$id.'.'.$fotoExtesao;
 
                 if (is_writable($dirF)) {
-                    if (!move_uploaded_file($file->getPathname(), $arquivoF)) {
-                        throw new Exception('Erro ao salvar o arquivo');
+                    if(file_exists($arquivoF)){
+                        unlink($arquivoF);
                     }
+                    move_uploaded_file($file->getPathname(), $arquivoF);
                 } else {
                     throw new Exception('Diretório inválido');
                 }
+
+                $sql = <<<SQL
+                    update nossotime set
+                        foto = '{$arquivo}'
+                    where id = {$id}
+SQL;
+                $app['db']->exec($sql);
             }
 
-            $sql = <<<SQL
-                update nossotime set
-                    foto = '{$arquivo}'
-                where id = {$id}
-SQL;
-            $app['db']->exec($sql);
 
             if(is_array($idiomas)){
                 $sql = <<<DML
@@ -173,6 +175,38 @@ SQL;
             } catch (Exception $e){
                 return $e->getMessage();
             }
+        });
+
+        $this->con->get('/curriculo/{id}', function($id) use($app){
+            $sql = <<<SQL
+                select
+                  id,
+                  nome,
+                  funcao,
+                  resumo,
+                  curriculo,
+                  foto,
+                  curriculolotes
+                from nossotime
+                where id = {$id}
+SQL;
+            $time = $app['db']->fetchAll($sql)[0];
+
+            $sql = <<<SQL
+                SELECT
+                  nome,
+                  imagem
+                from idiomatime idt
+                inner join idioma idi on idt.ididioma = idi.id
+                where idtime = {$id}
+                order by nome
+SQL;
+            $idiomas = $app['db']->fetchAll($sql);
+
+            return $app['twig']->render('pages/home/curriculo.twig', [
+                'dados' => $time,
+                'idiomas' => $idiomas
+            ]);
         });
 
         return $this->con;

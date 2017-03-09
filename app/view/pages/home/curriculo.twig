@@ -1,0 +1,127 @@
+{% extends "layout/main.twig" %}
+
+{% block style %}
+    <style>
+        #divCurriculo #desCurriculo {
+            overflow-y: scroll;
+        }
+
+        h2 {
+            padding-bottom: 0px !important;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-header img {
+                display: none;
+            }
+        }
+        .navbar-header img {
+            height: 50px;
+            width: 300px;
+        }
+
+        #curriculo {
+            margin-top: 88px;
+        }
+
+        #curriculo .container .row {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .well #divCurriculo {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #divResumo, #desCurriculo {
+            text-align: justify;
+        }
+
+        #divFoto { height: 600px; }
+        #divFoto #foto { height: 500px; }
+        #divFoto #idiomas { height: 50px; }
+        #divFoto fieldset legend { margin-bottom: 5px; }
+        #divResumo { height: 600px; }
+        #divCurriculo { height: 600px; }
+        #divCurriculo #desCurriculo { height: 530px; }
+        #divBotoes { height: 50px; padding-top: 10px; }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <header id="navigation">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ RAIZ }}"><h1><img src="{{ RAIZ }}web/images/logo-horizontal.png" alt="logo"></h1></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="javascript:voltaHome();">Voltar</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div><!--/navbar-->
+    </header> <!--/#navigation-->
+
+    <section id="curriculo">
+        <div id="main-carousel" class="carousel slide">
+            <div class="container">
+                <div class="row">
+                    <div class="well col-sm-12 text-center topo-section">
+                        <h1 class="title-one">Currículo</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class=" well col-lg-12">
+                        <div id="divFoto" class="col-lg-4">
+                            <div id="foto">
+                                <img src="{{ dados.foto }}" alt="" width="336" height="500">
+                            </div>
+                            <div id="idiomas">
+                                <fieldset>
+                                    <legend>Idiomas</legend>
+                                    {% for idioma in idiomas %}
+                                        <img src="{{ idioma.imagem }}" alt="" title="{{ idioma.nome }}" width="20" height="20">
+                                    {% endfor %}
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div id="divResumo" class="col-lg-8">
+                            <fieldset>
+                                <legend>Resumo</legend>
+                                {{ dados.resumo }}
+                            </fieldset>
+                        </div>
+                        <div id="divCurriculo" class="col-lg-12">
+                            <fieldset>
+                                <legend>Currículo</legend>
+                                <div id="desCurriculo" class="col-lg-12">
+                                    {{ dados.curriculo }}
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div id="divBotoes" class="col-lg-12 text-center">
+                            <input type="button" class="btn btn-success" value="Currículo Lotes" onclick="abreCurriculoLotes('{{ dados.curriculolotes }}')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block jsCode %}
+    <script>
+        function abreCurriculoLotes(url){
+            window.open(url, "_blank");
+        }
+    </script>
+{% endblock %}

@@ -1386,6 +1386,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+/**
+   Sectin Curriculo
+**/
+section#curriculo {
+	background-image:url("../images/bg-img.png");
+}
+
 /*====================
 ======Footer CSS=====
 ======================*/
