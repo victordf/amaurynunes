@@ -1,142 +1,104 @@
-create database amaury;
-use amaury;
-
-create table carrossel (
-	bcrid int auto_increment,
-    bcrimg varchar(300) not null,
-    bcrprincipal bool default false,
-    bcrtitulo varchar(300),
-    bcrsubtitulo varchar(300),
-    bcrtembotao bool default false,
-    bcrtxtbotao varchar(100),
-    bcrfuncbotao varchar(400),
-    primary key(bcrid)
+CREATE TABLE areaatuacao
+(
+    id BIGINT(20) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    titulo VARCHAR(300),
+    texto VARCHAR(500),
+    status CHAR(1) DEFAULT 'A'
 );
-
-insert into carrossel (bcrimg, bcrprincipal, bcrtitulo, bcrsubtitulo, bcrtembotao)
-values ('web/images/slider/grupo.png', 1, '', '',0);
-
-create table portfolio_categoria (
-	bpcid int auto_increment not null,
-    bpcdsc varchar(100) not null,
-    bpcvalor varchar(100),
-    primary key(bpcid)
+CREATE UNIQUE INDEX id ON areaatuacao (id);
+CREATE TABLE artigo
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    titulo VARCHAR(100) NOT NULL,
+    resumo VARCHAR(250) NOT NULL,
+    arquivo VARCHAR(100) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    publico TINYINT(1) DEFAULT '0',
+    userid INT(11) NOT NULL,
+    datacriacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    link VARCHAR(255),
+    tipoartigo CHAR(1) DEFAULT 'A',
+    texto TEXT,
+    CONSTRAINT artigo_ibfk_1 FOREIGN KEY (userid) REFERENCES usuario (id)
 );
-
-create table portfolio (
-	bptid int auto_increment not null,
-    bpcid int not null,
-    bpturl varchar(300) not null,
-    bpttitulo varchar(100),
-    bptsubtitulo varchar(200),
-    bptlink varchar(400),
-    primary key(bptid),
-    constraint fk_categoria_portfolio foreign key(bpcid) references portfolio_categoria(bpcid)
+CREATE INDEX userid ON artigo (userid);
+CREATE TABLE carrossel
+(
+    bcrid INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    bcrimg VARCHAR(300) NOT NULL,
+    bcrprincipal TINYINT(1) DEFAULT '0',
+    bcrtitulo VARCHAR(300),
+    bcrsubtitulo VARCHAR(300),
+    bcrtembotao TINYINT(1) DEFAULT '0',
+    bcrtxtbotao VARCHAR(100),
+    bcrfuncbotao VARCHAR(400)
 );
-
-insert into portfolio_categoria (bpcdsc, bpcvalor) values ('HTML', 'html');
-insert into portfolio_categoria (bpcdsc, bpcvalor) values ('Wordpress', 'wordpress');
-
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (1, 'web/images/portfolio/1.jpg', 'Teste', 'Teste 1', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (2, 'web/images/portfolio/2.jpg', 'Teste', 'Teste 2', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (1, 'web/images/portfolio/3.jpg', 'Teste', 'Teste 3', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (1, 'web/images/portfolio/4.jpg', 'Teste', 'Teste 4', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (1, 'web/images/portfolio/5.jpg', 'Teste', 'Teste 5', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (2, 'web/images/portfolio/6.jpg', 'Teste', 'Teste 6', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (2, 'web/images/portfolio/7.jpg', 'Teste', 'Teste 7', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (2, 'web/images/portfolio/8.jpg', 'Teste', 'Teste 8', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (1, 'web/images/portfolio/9.jpg', 'Teste', 'Teste 9', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (2, 'web/images/portfolio/10.jpg', 'Teste', 'Teste 10', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (1, 'web/images/portfolio/11.jpg', 'Teste', 'Teste 11', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-insert into portfolio (bpcid, bpturl, bpttitulo, bptsubtitulo, bptlink) values (1, 'web/images/portfolio/12.jpg', 'Teste', 'Teste 12', 'https://www.google.com.br/?gfe_rd=cr&ei=DmfdV9SwBZOF8Qfhpaow&gws_rd=ssl');
-
-create table perfil (
-    id int auto_increment not null,
-    nome varchar(100) not null,
-    primary key(id)
+CREATE TABLE idioma
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    imagem VARCHAR(255) NOT NULL
 );
-
-insert into perfil (nome) values ('Administrador');
-insert into perfil (nome) values ('Advogado');
-
-
-create table usuario (
-    id int auto_increment not null,
-    idperfil int not null,
-    nome varchar(200) not null,
-    email varchar(255) not null,
-    senha varchar(255) not null,
-    foto varchar(255),
-    cargo varchar(100),
-    descricao varchar(255),
-    facebook varchar(255),
-    linkedin varchar(255),
-    googlep varchar(255),
-    twitter varchar(255),
-    primeiravez bool default true,
-    advogado bool default false,
-    primary key(id),
-    foreign key(idperfil) references perfil(id),
-    unique(email),
-    index(email)
+CREATE TABLE idiomatime
+(
+    ididioma INT(11) NOT NULL,
+    idtime INT(11) NOT NULL,
+    CONSTRAINT `PRIMARY` PRIMARY KEY (ididioma, idtime),
+    CONSTRAINT fk_idioma FOREIGN KEY (ididioma) REFERENCES idioma (id),
+    CONSTRAINT fk_nossotime FOREIGN KEY (idtime) REFERENCES nossotime (id)
 );
-
-insert into usuario (
-    idperfil,
-    nome,
-    email,
-    senha,
-    cargo,
-    descricao
-) values (
-    1,
-    'Victor Martins Machado',
-    'victormachado90@gmail.com',
-    '$2y$04$LDX0xqOKTsL/G2FIadbx0OfwYgT1nzHAuDTMkSieG./wC2FZBMWY2',
-    'Desenvolvedor',
-    'O maluco que fez essa bagaça'
+CREATE INDEX fk_nossotime ON idiomatime (idtime);
+CREATE TABLE nossotime
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(200) NOT NULL,
+    funcao VARCHAR(200),
+    resumo TEXT,
+    curriculo TEXT,
+    foto VARCHAR(255),
+    status CHAR(1) DEFAULT 'A',
+    curriculolotes VARCHAR(255)
 );
-
-create table artigo (
-    id int auto_increment not null,
-    titulo varchar(100) not null,
-    resumo varchar(250) not null,
-    arquivo varchar(100) not null,
-    url varchar(255) not null,
-    publico bool default false,
-    userid int not null,
-    datacriacao datetime default now(),
-    primary key (id),
-    foreign key (userid) references usuario(id)
+CREATE TABLE perfil
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL
 );
-
-alter table artigo add column link varchar(255);
-alter table artigo add column tipoartigo char(1) default 'A';
-alter table artigo add column texto text;
-
-create table nossotime (
-    id int auto_increment,
-    nome varchar(200) not null,
-    funcao varchar(200),
-    resumo text,
-    curriculo text,
-    foto varchar(255),
-    primary key(id)
+CREATE TABLE portfolio
+(
+    bptid INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    bpcid INT(11) NOT NULL,
+    bpturl VARCHAR(300) NOT NULL,
+    bpttitulo VARCHAR(100),
+    bptsubtitulo VARCHAR(200),
+    bptlink VARCHAR(400),
+    CONSTRAINT fk_categoria_portfolio FOREIGN KEY (bpcid) REFERENCES portfolio_categoria (bpcid)
 );
-
-create table idioma (
-    id int auto_increment,
-    nome varchar(100) not null,
-    imagem varchar(255) not null,
-    primary key(id)
+CREATE INDEX fk_categoria_portfolio ON portfolio (bpcid);
+CREATE TABLE portfolio_categoria
+(
+    bpcid INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    bpcdsc VARCHAR(100) NOT NULL,
+    bpcvalor VARCHAR(100)
 );
-
-select id, nome, imagem from idioma
-
-create table idiomatime (
-    ididioma int not null,
-    idtime int not null,
-    primary key(ididioma, idtime),
-    constraint fk_idioma foreign key (ididioma) references idioma(id),
-    constraint fk_nossotime foreign key (idtime) references nossotime(id)
+CREATE TABLE usuario
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    idperfil INT(11) NOT NULL,
+    nome VARCHAR(200) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    foto VARCHAR(255),
+    cargo VARCHAR(100),
+    descricao VARCHAR(255),
+    facebook VARCHAR(255),
+    linkedin VARCHAR(255),
+    googlep VARCHAR(255),
+    twitter VARCHAR(255),
+    primeiravez TINYINT(1) DEFAULT '1',
+    advogado TINYINT(1) DEFAULT '0',
+    CONSTRAINT usuario_ibfk_1 FOREIGN KEY (idperfil) REFERENCES perfil (id)
 );
+CREATE UNIQUE INDEX email ON usuario (email);
+CREATE INDEX email_2 ON usuario (email);
+CREATE INDEX idperfil ON usuario (idperfil);
