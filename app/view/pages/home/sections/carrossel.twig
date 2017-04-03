@@ -13,9 +13,7 @@
                         <div>
                             <h2 class="heading animated bounceInDown">{{ bcr.bcrtitulo }}</h2>
                             <p class="animated bounceInUp">{{ bcr.bcrsubtitulo }}</p>
-                            {% if bcr.bcrtembotao != 0 %}
-                                <a class="btn btn-default slider-btn animated fadeIn" href="javascript(alert('teste'))">{{ bcr.bcrtxtbotao }}</a>
-                            {% endif %}
+                            <a class="btn animated fadeIn btn-slider-carrossel" href="javascript:void(iniciaSite())"><i class="fa fa-chevron-down fa-5x" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
@@ -25,5 +23,11 @@
         <a class="carousel-left member-carousel-control hidden-xs" href="#main-carousel" data-slide="prev"><i class="fa fa-angle-left"></i></a>
         <a class="carousel-right member-carousel-control hidden-xs" href="#main-carousel" data-slide="next"><i class="fa fa-angle-right"></i></a>
     </div>
+
+    <script>
+        function iniciaSite(){
+            $('body').scrollspy({target: '#sobre'});
+        }
+    </script>
 
 </section><!--/#home-->

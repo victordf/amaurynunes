@@ -8,7 +8,7 @@
             {% for artigo in artigos %}
                 <div class="col-sm-4">
                     <div class="single-blog">
-                        <h2>{{ artigo.titulo }}</h2>
+                        <h2 class="h2-titulo-artigo">{{ artigo.titulo }}</h2>
                         <ul class="post-meta">
                             <li><i class="fa fa-pencil-square-o"></i> {{ artigo.username }}</li>
                             <li><i class="fa fa-clock-o"></i><strong> em:</strong> {{ artigo.datacriacao }}</li>
@@ -16,10 +16,12 @@
                         <div class="blog-content">
                             <p>{{ artigo.resumo }}</p>
                         </div>
-                        {#<a href="" class="btn btn-primary" data-toggle="modal" data-target="#blog-detail">Leia mais</a>#}
-                        {#<a href="{% if artigo.tipoartigo == 'A' %}{{ artigo.url }}{% else %}{{ artigo.link }}{% endif %}" target="_blank" class="btn btn-primary" >Leia mais</a>#}
-                        <a href="{{ RAIZ }}artigo/{{ artigo.id }}" target="_self" class="btn btn-primary" >Leia mais</a>
-                        {#<input type="button" class="btn btn-primary" onclick="abreArtigo('{{ artigo.url }}')" value="Leia Mais">#}
+                        <div class="text-center">
+                            {#<a href="" class="btn btn-primary" data-toggle="modal" data-target="#blog-detail">Leia mais</a>#}
+                            {#<a href="{% if artigo.tipoartigo == 'A' %}{{ artigo.url }}{% else %}{{ artigo.link }}{% endif %}" target="_blank" class="btn btn-primary" >Leia mais</a>#}
+                            <a href="{{ RAIZ }}artigo/{{ artigo.id }}" target="_self" class="btn btn-primary" >Leia mais</a>
+                            {#<input type="button" class="btn btn-primary" onclick="abreArtigo('{{ artigo.url }}')" value="Leia Mais">#}
+                        </div>
                     </div>
                 </div>
             {% endfor %}

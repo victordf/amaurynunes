@@ -1,6 +1,6 @@
 <section id="our-team">
     <div class="col-sm-12 text-center topo-section">
-        <h1 class="title-one">Nosso Time</h1>
+        <h1 class="title-one">Equipe</h1>
     </div>
     <div class="container">
         <div id="team-carousel" class="carousel slide" data-interval="false">
@@ -27,7 +27,7 @@
                             <h5>{{ time.funcao }}</h5>
                             <p></p>
                             <div class="socials text-center">
-                                <input type="button" class="btn btn-success" value="CURRÍCULO">
+                                <input type="button" class="btn btn-success" value="CURRÍCULO" onclick="abreCurriculo({{ time.id }})">
                             </div>
                         </div>
                     </div>
@@ -38,4 +38,10 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function abreCurriculo(id){
+            window.open("{{ RAIZ }}admin/nossotime/curriculo/"+id, "_blank");
+        }
+    </script>
 </section>
