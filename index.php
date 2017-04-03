@@ -33,22 +33,22 @@ $encoder = new BCryptPasswordEncoder(4);
 $app['debug'] = true;
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-//    'db.options' => array(
-//        'driver'      => 'pdo_mysql',
-//        'host'        => "an_sistema.mysql.dbaas.com.br",
-//        'dbname'      => "an_sistema",
-//        'user'        => "an_sistema",
-//        'password'    => "novocpc01"
-////        'charset'     => 'utf8mb4'
-//    )
     'db.options' => array(
         'driver'      => 'pdo_mysql',
-        'host'        => "localhost",
-        'dbname'      => "amaury",
-        'user'        => "root",
-        'password'    => "123456",
-        'charset'     => 'utf8mb4'
+        'host'        => "an_sistema.mysql.dbaas.com.br",
+        'dbname'      => "an_sistema",
+        'user'        => "an_sistema",
+        'password'    => "novocpc01"
+//        'charset'     => 'utf8mb4'
     )
+//    'db.options' => array(
+//        'driver'      => 'pdo_mysql',
+//        'host'        => "localhost",
+//        'dbname'      => "amaury",
+//        'user'        => "root",
+//        'password'    => "123456",
+//        'charset'     => 'utf8mb4'
+//    )
 ));
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
