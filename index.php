@@ -75,11 +75,11 @@ $app['twig']->addFunction(new \Twig_SimpleFunction('path', function($url) use ($
     return $app['url_generator']->generate($url);
 }));
 
-$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
-//$app['twig']->addGlobal('RAIZ', '/');
+//$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
+$app['twig']->addGlobal('RAIZ', '/');
 
-define('RAIZ', '/amaurynunes/');
-//define('RAIZ', '/');
+//define('RAIZ', '/amaurynunes/');
+define('RAIZ', '/');
 
 define('CONTRUCAO', false);
 define('DIR', __DIR__);
