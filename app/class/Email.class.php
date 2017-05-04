@@ -34,13 +34,13 @@ class Email {
         $this->mailer->Host = 'smtp.amaurynunes.com.br';
         $this->mailer->Username = !empty($user) ? $user : self::sisEmail;
         $this->mailer->Password = !empty($pass) ? $pass : self::sisPass;
-//        $this->mailer->SMTPOptions = array (
-//            'ssl' => array(
-//                'verify_peer'  => false,
-//                'verify_peer_name'  => false,
-//                'allow_self_signed' => true
-//            )
-//        );
+        $this->mailer->SMTPOptions = array (
+            'ssl' => array(
+                'verify_peer'  => false,
+                'verify_peer_name'  => false,
+                'allow_self_signed' => true
+            )
+        );
         $this->mailer->Port = 587;
         $this->setFormato();
         $this->setEmailFrom();

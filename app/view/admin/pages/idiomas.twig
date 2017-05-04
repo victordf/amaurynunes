@@ -51,7 +51,7 @@
                             <input type="submit" class="btn btn-success" value="Salvar">
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
@@ -62,23 +62,23 @@
             <div class="well col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
                 <table class="table">
                     <thead>
-                        <tr>
-                            <td></td>
-                            <td>Nome</td>
-                            <td>Imagem</td>
-                        </tr>
+                    <tr>
+                        <td></td>
+                        <td>Nome</td>
+                        <td>Imagem</td>
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for idioma in idiomas %}
-                            <tr>
-                                <td>
-                                    <button class="btn btn-success btn-editar" data-id="{{ idioma.id }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                    <button class="btn btn-danger btn-deletar" data-id="{{ idioma.id }}"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                </td>
-                                <td>{{ idioma.nome }}</td>
-                                <td><img src="{{ idioma.imagem }}" alt="" width="30" height="30"></td>
-                            </tr>
-                        {% endfor %}
+                    {% for idioma in idiomas %}
+                        <tr>
+                            <td>
+                                <button class="btn btn-success btn-editar" data-id="{{ idioma.id }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                <button class="btn btn-danger btn-deletar" data-id="{{ idioma.id }}"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                            </td>
+                            <td>{{ idioma.nome }}</td>
+                            <td><img src="{{ idioma.imagem }}" alt="" width="30" height="30"></td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -99,27 +99,29 @@
                 var id = this.getAttribute('data-id');
 
                 swal({
-                    title: 'Tem certeza?',
-                    text: 'Deseja apagar este idioma?',
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-success",
-                    confirmButtonText: 'Sim',
-                    cancelButtonText: 'Não',
-                    closeOnConfirm: false
-                },
-                function(isConfirm){
-                    if(isConfirm){
-                        $.ajax({
-                            type: 'DELETE',
-                            data: {
-                                id: id
-                            },
-                            success: function(data) {
-                                swal(data);
+                            title: 'Tem certeza?',
+                            text: 'Deseja apagar este idioma?',
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: 'Sim',
+                            cancelButtonText: 'Não',
+                            closeOnConfirm: false
+                        },
+                        function(isConfirm){
+                            if(isConfirm){
+                                $.ajax({
+                                    url: '{{ RAIZ }}admin/idiomas/delete',
+                                    type: 'post',
+                                    data: {
+                                        id: id
+                                    },
+                                    success: function(data) {
+                                        swal(data);
+                                        window.location.reload();
+                                    }
+                                });
                             }
                         });
-                    }
-                });
             });
         });
     </script>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="bedf9670-c0be-47f2-8d33-c10cbfeacfe4" name="AmauryNunes" url="http://ftp.amaurynunes.com.br">
+        <fileTransfer host="ftp.amaurynunes.com.br" port="21" password="dfc4dfc5dfdcdfc5dfc9dfdadfc9df9adf9b" username="amaurynunes">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

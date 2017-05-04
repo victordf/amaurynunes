@@ -107,7 +107,7 @@
                             </fieldset>
                         </div>
                         <div id="divBotoes" class="col-lg-12 text-center">
-                            <input type="button" class="btn btn-success" value="Currículo Lotes" onclick="abreCurriculoLotes('{{ dados.curriculolotes }}')">
+                            <input type="button" class="btn btn-success" value="Currículo Lattes" onclick="abreCurriculoLotes('{{ dados.curriculolotes }}')">
                         </div>
                     </div>
                 </div>
@@ -122,6 +122,10 @@
     <script>
         function abreCurriculoLotes(url){
             window.open(url, "_blank");
+        }
+
+        function voltaHome(){
+            window.location.href = "{{ RAIZ }}";
         }
     </script>
 {% endblock %}

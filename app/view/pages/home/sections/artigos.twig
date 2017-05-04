@@ -1,6 +1,6 @@
 <section id="blog" class="parallax-section">
     <div class="col-sm-12 text-center topo-section">
-        <h1 class="title-one" style="color: #ffffff !important;">Artigos</h1>
+        <h1 class="title-one" style="color: #666666 !important;">Artigos</h1>
     </div>
     <div class="container">
         <div class="row">
@@ -10,7 +10,7 @@
                     <div class="single-blog">
                         <h2 class="h2-titulo-artigo">{{ artigo.titulo }}</h2>
                         <ul class="post-meta">
-                            <li><i class="fa fa-pencil-square-o"></i> {{ artigo.username }}</li>
+                            <li><i class="fa fa-pencil-square-o"></i> {{ artigo.autor }}</li>
                             <li><i class="fa fa-clock-o"></i><strong> em:</strong> {{ artigo.datacriacao }}</li>
                         </ul>
                         <div class="blog-content">
@@ -25,6 +25,12 @@
                     </div>
                 </div>
             {% endfor %}
+
+            {% if todosArtigos == 1 %}
+                <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                    <a href="{{ RAIZ }}artigos" class="btn btn-primary btn-artigo">Todos os artigos</a>
+                </div>
+            {% endif %}
 
         </div>
     </div>

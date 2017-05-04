@@ -13,7 +13,7 @@
         }
         .navbar-header img {
             height: 50px;
-            width: 300px;
+            width: 50px;
         }
 
         .bsvCor{
@@ -49,9 +49,9 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ RAIZ }}"><h1><img src="{{ RAIZ }}web/images/logo-horizontal.png" alt="logo"></h1></a>
+                    <a class="navbar-brand" href="{{ RAIZ }}"><h1><img src="{{ RAIZ }}web/images/logo.png" alt="logo"></h1></a>
                 </div>
-                <div class="collapse navbar-collapse">
+                <div class="collapse navbar-collapse" id="navbar-topo">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="scroll active"><a href="#navigation">Home</a></li>
                         <li class="scroll"><a href="#sobre">Escritório</a></li>
@@ -73,6 +73,8 @@
 
     {% include 'pages/home/sections/time.twig' %}
 
+    {% include 'pages/home/sections/grupo.twig' %}
+
     {% include 'pages/home/sections/artigos.twig' %}
 
     {% include 'pages/home/sections/mapa.twig' %}
@@ -87,11 +89,12 @@
             alert('teste');
         });
 
+
+
         $('#btn-send-contato').click(function(){
             var nome = $('input[name=name]').val();
             var email = $('input[name=email]').val();
             var mensagem = $('#message').val();
-            console.log(mensagem);
             if(validaForm('contact-form')){
                 $.ajax({
                     url: "{{ RAIZ }}email",
@@ -111,6 +114,17 @@
                     }
                 });
             }
+        });
+
+        $('.ulGrupo li').click(function(){
+            $('.ulGrupo li').addClass('grupoHide');
+            $(this).removeClass('grupoHide');
+            $('.grupoHide').fadeOut('slow');
+            $(this).animate({left: '0px'});
+        });
+
+        $('.divGrupo2 div').click(function(){
+
         });
     </script>
 {% endblock %}

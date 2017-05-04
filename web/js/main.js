@@ -107,4 +107,16 @@ function Scroll() {
 	});
 });
 
+// -- VICTOR MARTINS MACHAO --
+$( document ).ready(function(){
+	$('.btn-single-service').click(function(){
+		var obj = $(this).parent().parent();
+		if(obj.hasClass('single-service-big')){
+			obj.removeClass('single-service-big');
+		} else {
+			obj.addClass('single-service-big');
+		}
+	});
+});
+
 

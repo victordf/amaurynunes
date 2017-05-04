@@ -75,11 +75,17 @@ $app['twig']->addFunction(new \Twig_SimpleFunction('path', function($url) use ($
     return $app['url_generator']->generate($url);
 }));
 
-//$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
-$app['twig']->addGlobal('RAIZ', '/');
+$app['twig']->addGlobal('RAIZ', '/amaurynunes/');
+//$app['twig']->addGlobal('RAIZ', '/');
+//$app['twig']->addGlobal('RAIZ', '/an/');
+$app['twig']->addGlobal('URL', "http://" . $_SERVER['HTTP_HOST']. $_SERVER['REQUEST_URI']);
+$app['twig']->addGlobal('TITLEFB', "Amaury Nunes, advogados associados");
 
-//define('RAIZ', '/amaurynunes/');
-define('RAIZ', '/');
+define('RAIZ', '/amaurynunes/');
+//define('RAIZ', '/');
+//define('RAIZ', '/an/');
+define('URL', "http://" . $_SERVER['HTTP_HOST']. $_SERVER['REQUEST_URI']);
+define('TITLEFB', "Amaury Nunes, advogados associados");
 
 define('CONTRUCAO', false);
 define('DIR', __DIR__);
@@ -105,15 +111,15 @@ $app->error(function(\Exception $e, $code) use($app){
 });
 
 $app->after(function() use ($app) {
-        $token = $app['security.token_storage']->getToken();
-        $loged = empty($token) ? false : true;
-        if ($loged) {
-            $email = $token->getUser()->getUsername();
-            $sql = "select id, nome From usuario where email = '{$email}'";
-            $res = $app['db']->fetchAll($sql)[0];
-            $app['session']->set('userid', $res['id']);
-            $app['session']->set('username', $res['nome']);
-        }
+    $token = $app['security.token_storage']->getToken();
+    $loged = empty($token) ? false : true;
+    if ($loged) {
+        $email = $token->getUser()->getUsername();
+        $sql = "select id, nome From usuario where email = '{$email}'";
+        $res = $app['db']->fetchAll($sql)[0];
+        $app['session']->set('userid', $res['id']);
+        $app['session']->set('username', $res['nome']);
+    }
 });
 
 $app->before(function() use ($app){
@@ -154,6 +160,7 @@ DML;
         select 
             art.id, 
             art.titulo, 
+            art.autor,
             art.resumo, 
             art.url,
             date_format(art.datacriacao, '%d/%m/%Y') as datacriacao,
@@ -202,7 +209,8 @@ DML;
             'escritorio'=> $escritorio,
             'areas'     => $areas,
             'nossotime' => $not,
-            'cont'      => 5
+            'cont'      => 5,
+            'todosArtigos' => 1
         ));
     } else {
         return $app['twig']->render('pages/construcao.twig');
@@ -232,6 +240,8 @@ $app->get('artigo/{id}', function($id) use($app){
         select titulo, resumo, texto From artigo where id = {$id}
 DML;
     $res = $app['db']->fetchAll($sql)[0];
+    $app['twig']->addGlobal('TITLEFB', "ARTIGO: ".$res['titulo']);
+    define('TITLEFB', "ARTIGO: ".$res['titulo']);
     return $app['twig']->render('pages/home/artigo.twig', [
         'artigo' => [
             'titulo' => $res['titulo'],
@@ -246,6 +256,7 @@ $app->get('artigos',function() use($app){
         select 
             art.id, 
             art.titulo, 
+            art.autor,
             art.resumo, 
             art.url,
             date_format(art.datacriacao, '%d/%m/%Y') as datacriacao,
@@ -260,7 +271,8 @@ DML;
     $art = $app['db']->fetchAll($sql);
 
     return $app['twig']->render('pages/artigo/artigos.twig', [
-        'artigos'   => $art
+        'artigos'   => $art,
+        'todosArtigos' => 0
     ]);
 });
 
@@ -278,6 +290,7 @@ $app->get('admin/artigo/cadastro', function() use($app){
         'artigo' => [
             'id' => '',
             'titulo' => '',
+            'autor' => '',
             'resumo' => '',
             'texto' => ''
         ],
@@ -287,7 +300,7 @@ $app->get('admin/artigo/cadastro', function() use($app){
 
 $app->get('admin/artigo/cadastro/{id}', function($id) use($app){
     $sql = <<<DML
-        select titulo, resumo, texto From artigo where id = {$id}
+        select titulo, autor, resumo, texto From artigo where id = {$id}
 DML;
     $res = $app['db']->fetchAll($sql)[0];
     $token = $app['security.token_storage']->getToken();
@@ -299,6 +312,7 @@ DML;
         'artigo' => [
             'id' => $id,
             'titulo' => $res['titulo'],
+            'autor' => $res['autor'],
             'resumo' => $res['resumo'],
             'texto' => $res['texto']
         ],
@@ -310,11 +324,13 @@ $app->post('admin/artigo/cadastro', function(Request $request) use($app){
     $req = $request->request->all();
     $publico = empty($req['publico']) ? 'false' : 'true';
     $userid = $app['session']->get('userid');
-    $req['texto'] = str_replace('../http:', 'http:', str_replace('../../web/images/editor/', 'http://localhost/amaurynunes/web/images/editor/', $req['texto']));
+    $server = $_SERVER['SERVER_NAME'] . RAIZ;
+    $req['texto'] = str_replace('../http:', 'http:', str_replace('../../web/images/editor/', 'http://'.$server.'/web/images/editor/', $req['texto']));
     if(empty($req['id'])) {
         $sql = <<<DML
-        insert into artigo (titulo, resumo, texto, publico, arquivo, url, userid) values (
+        insert into artigo (titulo, autor, resumo, texto, publico, arquivo, url, userid) values (
             '{$req['titulo']}',
+            '{$req['autor']}',
             '{$req['resumo']}',
             '{$req['texto']}',
             {$publico},
@@ -327,6 +343,7 @@ DML;
         $sql = <<<DML
         update artigo set
             titulo = '{$req['titulo']}',
+            autor = '{$req['autor']}',
             resumo = '{$req['resumo']}',
             texto = '{$req['texto']}'
         where id = {$req['id']}
@@ -347,9 +364,14 @@ DML;
 $app->post('editor/imagem', function(Request $request) use($app){
     $file = $request->files->get('file');
 
+    $numero = rand(0, 9999);
+
     $arquivo = $file->getClientOriginalName();
-    $url = RAIZ."web/images/editor/" . $arquivo;
-    $file->move(__DIR__.'/web/images/editor/', $arquivo);
+    $fotoExtesao = $file->getClientOriginalExtension();
+    $url = RAIZ."web/images/editor/imgeditor_" . $numero . '.' . $fotoExtesao;
+    $urlF = DIR.'/web/images/editor/imgeditor_' . $numero . '.' . $fotoExtesao;
+//    $file->move($urlF);
+    move_uploaded_file($file->getPathname(), $urlF);
 
     return $app->json(['location' => $url]);
 });
@@ -502,10 +524,11 @@ DML;
     ));
 });
 
-$app->delete('admin/idiomas', function(Request $request) use($app){
+$app->post('admin/idiomas/delete', function(Request $request) use($app){
     $req = $request->request->all();
     $sql = <<<DML
-        delete from idiomas where id = {$req['id']}
+        delete from idiomatime where ididioma = {$req['id']};
+        delete from idioma where id = {$req['id']};
 DML;
     $app['db']->exec($sql);
     return 'Idioma deletado com sucesso';
@@ -543,10 +566,12 @@ $app->post('admin/idiomas', function(Request $request) use($app){
         if(empty($req['id'])) {
             if(!empty($fle)) {
                 $nome = $fle->getClientOriginalName();
-                $dir = RAIZ . 'web/images/idiomas';
-                $dirF = __DIR__ . '/web/images/idiomas';
-                $arquivo = $dir . $nome;
-                $arquivoF = $dirF . $nome;
+                $fotoExtesao = $fle->getClientOriginalExtension();
+                $dir = RAIZ . 'web/images/idiomas/';
+                $dirF = DIR . '/web/images/idiomas/';
+                $arquivo = $dir . $req['nome'] . $fotoExtesao;
+                $arquivoF = $dirF . $req['nome'] . $fotoExtesao;
+
                 if (is_writable($dirF)) {
                     if (move_uploaded_file($fle->getPathname(), $arquivoF)) {
                         $sql = <<<DML
@@ -675,7 +700,7 @@ $app->post('admin/foto', function(Request $request) use($app){
     try {
         $req = $request->request->all();
         $foto = $request->files->get('file');
-var_dump($foto);
+        var_dump($foto);
         die();
         $dir = __DIR__ . '/web/images/usuarios/';
         $upFile = $dir . 'foto' . $req['id'] . '.jpg';
@@ -910,14 +935,18 @@ $app->get('teste', function() use($app, $encoder){
 $app->post('email', function(Request $request) use($app, $email){
     $req = $request->request->all();
 //    $email->addEmailTo(array('Victor Martins' => $req['recipient']));
-    $email->addEmailTo(array('Victor Martins' => 'victor@bsvsolucoes.com.br'));
+//    $email->addEmailTo(array('Victor Martins' => 'victor@bsvsolucoes.com.br'));
+
+    $email->setEmailFrom();
+    $email->addEmailTo(['Contato' => Email::sisEmail]);
+
     $assunto = $req['subject'];
     $corpo = $req['mensagem'];
 
     if(!$email->send($assunto, $corpo)){
         return $email->error;
     } else {
-        return 'FOI CARAI!';
+        return 'Mensagem enviada com sucesso';
     }
 });
 

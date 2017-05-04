@@ -93,17 +93,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="advogado" class="control-label col-lg-2">Visível no site</label>
-                        <div class="col-lg-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="advogado" name="advogado">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <div class="col-lg-12 text-center">
                             <input type="submit" maxlength="255" class="btn btn-success" id="btn-salvar" value="Salvar">
                         </div>
@@ -155,13 +144,12 @@
                         <th>LinkedIN</th>
                         <th>Google+</th>
                         <th>Twitter</th>
-                        <th></th>
                     </tr>
                     {% for usuario in usuarios %}
                         <tr>
                             <th>
                                 <button class="btn btn-success" id="btn-editar" onclick="editaUsuario({{ usuario.id }})"><i class="fa fa-pencil-square-o"></i></button>
-                                <button class="btn btn-warning" id="btn-foto" onclick="abreModal({{ usuario.id }})"><i class="fa fa-camera"></i></button>
+                                {#<button class="btn btn-warning" id="btn-foto" onclick="abreModal({{ usuario.id }})"><i class="fa fa-camera"></i></button>#}
                             </th>
                             <td>{{ usuario.nome }}</td>
                             <td>{{ usuario.email }}</td>
@@ -172,9 +160,6 @@
                             <td>{{ usuario.linkedin }}</td>
                             <td>{{ usuario.googlep }}</td>
                             <td>{{ usuario.twitter }}</td>
-                            <td>
-                                <input type="checkbox" {% if usuario.advogado == 1 %}checked{% endif %} onclick="visualizarUsuSite(this, {{ usuario.id }})">
-                            </td>
                         </tr>
                     {% endfor %}
                 </table>

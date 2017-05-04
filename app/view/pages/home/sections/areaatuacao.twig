@@ -1,6 +1,6 @@
 <section id="areas-atuacao" class="parallax-section">
     <div class="col-sm-12 text-center topo-section" >
-        <h1 class="title-one" style="color: #ffffff !important;">Áreas de atuação</h1>
+        <h1 class="title-one" style="color: #666666 !important;">Áreas de atuação</h1>
     </div>
     <div class="container">
         <div class="row">
@@ -11,148 +11,19 @@
                         {% for area in areas %}
                             <div class="col-sm-4">
                                 <div class="single-service">
-                                    <h2>{{ area.titulo }}</h2>
-                                    <p>{{ area.texto }}</p>
+                                    <div class="single-service-title">
+                                        <h2>{{ area.titulo }}</h2>
+                                    </div>
+                                    <div class="single-service-body">
+                                        <p>{{ area.texto }}</p>
+                                    </div>
+                                    <div class="single-service-action">
+                                        <input type="button" class="btn btn-primary btn-single-service" value="Leia mais">
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
 
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Constitucional e Administrativo</h2>#}
-                                {#<p>#}
-                                    {#Consultoria em questões de cunho constitucional, especialmente emissão de pareceres, e atuação judicial e extrajudicial em processos que envolvam a Administração Pública direta e indireta.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Processos Administrativos e Sindicâncias</h2>#}
-                                {#<p>#}
-                                    {#Defesa administrativa em sindicâncias e processos administrativos, tanto em matéria disciplinar como em licitações.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Atuação nos Tribunais de Contas</h2>#}
-                                {#<p>#}
-                                    {#Defesa em processos administrativos no âmbito dos Tribunais de Contas dos Estados e do Tribunal de Contas da União.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Improbidade Administrativa</h2>#}
-                                {#<p>#}
-                                    {#Defesa judicial de agentes públicos ou particulares demandados em ação de improbidade administrativa.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Concursos Públicos</h2>#}
-                                {#<p>#}
-                                    {#Atuação por meio de mandado de segurança ou ação de procedimento comum com pedido de tutela de urgência antecipada, conforme o caso, na defesa dos direitos de candidatos que se submeteram a concursos públicos, em qualquer fase do certame.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Arbitragem e Mediação</h2>#}
-                                {#<p>#}
-                                    {#Negociação e contratação de convenções de arbitragem e formulação de cláusulas compromissórias, bem como patrocínio de partes em processos arbitrais.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Previdência Privada</h2>#}
-                                {#<p>#}
-                                    {#Atuação no ramo da previdência complementar, especialmente perante as entidades de previdência privada, prestando consultoria no que tange às relações entre entidade previdenciária e patrocinadora, entidade previdenciária e associado.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Tributário e Financeiro</h2>#}
-                                {#<p>#}
-                                    {#Atuação judicial e extrajudicial em causas de natureza fiscal e de finanças públicas, com acompanhamento dos respectivos processos nas diversas instâncias administrativas e jurisdicionais.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Civil</h2>#}
-                                {#<p>#}
-                                    {#Assessoria em contratos civis, comerciais, financeiros, de seguros; constituição de pessoas jurídicas; Responsabilidade civil; direito das famílias e sucessório, judicial ou extrajudicialmente.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito do Consumidor</h2>#}
-                                {#<p>#}
-                                    {#Atuação preventiva e judicial em questões que envolvam relação de consumo.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Processual Civil</h2>#}
-                                {#<p>#}
-                                    {#Advocacia contenciosa em todas as instâncias judiciais, com expertise em ações de improbidade administrativa e ações civis públicas.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Trabalhista</h2>#}
-                                {#<p>#}
-                                    {#Assessoria consultiva, mediante elaboração de respostas e pareceres sobre casos concretos, bem como exame e elaboração de contratos de trabalho, aconselhamento para empresas e orientações especiais a empregados. Na área contenciosa, há o acompanhamento e a defesa dos processos até seu trânsito em julgado ou acordo, bem como na execução, em todos os Estados, Tribunais Regionais do Trabalho e Tribunal Superior do Trabalho.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Bancário e Liquidações Extrajudiciais</h2>#}
-                                {#<p>#}
-                                    {#Assessoria a instituições financeiras, inclusive as sob regime especial. Atuação judicial e extrajudicial na defesa de interesses de credores, devedores, sócios minoritários de instituições financeiras com liquidação decretada, seja na habilitação, seja na negociação de créditos.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Societário e Empresarial</h2>#}
-                                {#<p>#}
-                                    {#Atuação na constituição de sociedades e em aquisições ou vendas de participações societárias.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Econômico</h2>#}
-                                {#<p>#}
-                                    {#Assessoria em operações relativas à  legislação antitruste perante órgãos de defesa da concorrência e tribunais de justiça, compreendendo os atos de concentração e condutas que envolvam o abuso do poder econômico.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Auditoria Legal</h2>#}
-                                {#<p>#}
-                                    {#Análise e apresentação da situação legal das empresas auditadas, examinando questões societárias, trabalhistas, fiscais, econômicas, com análise dos processos judiciais e administrativos pendentes, bem como as potenciais repercussões legais de fusão, incorporação, alienação ou qualquer alteração estrutural da empresa.#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-sm-4">#}
-                            {#<div class="single-service">#}
-                                {#<h2>Direito Penal e Processual Penal</h2>#}
-                                {#<p>#}
-                                    {#Atuação em todas as instâncias judiciais, com expertise nos crimes da Lei 7.492/86 (Crimes contra o Sistema Financeiro Nacional).#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
                     </div>
                 </div>
             </div>

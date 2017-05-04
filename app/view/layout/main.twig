@@ -3,9 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Creative One Page Parallax Template">
-    <meta name="keywords" content="Creative, Onepage, Parallax, HTML5, Bootstrap, Popular, custom, personal, portfolio" />
+    <meta name="description" content="Amaury Nunes, advogados associados">
+    <meta name="keywords" content="" />
     <meta name="author" content="">
+
+    <meta property="og:url"           content="http://amaurynunes.com.br/an/" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Amaury Nunes" />
+    <meta property="og:description"   content="{{ TITLEFB }}" />
+    <meta property="og:image"         content="http://amaurynunes.com.br/an/web/images/fb-img.png" />
+
     <title>{{ TITLE }}</title>
     <link href="{{ RAIZ }}web/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ RAIZ }}web/css/prettyPhoto.css" rel="stylesheet">
@@ -24,7 +31,8 @@
 
     {% block style %}{% endblock %}
 </head><!--/head-->
-<body data-spy="scroll" data-target="#navbar-example">
+{#<body data-spy="scroll" data-target="#navbar-topo">#}
+<body>
     <div class="preloader">
         <div class="preloder-wrap">
             <div class="preloder-inner">
