@@ -110,12 +110,32 @@ function Scroll() {
 // -- VICTOR MARTINS MACHAO --
 $( document ).ready(function(){
 	$('.btn-single-service').click(function(){
-		var obj = $(this).parent().parent();
-		if(obj.hasClass('single-service-big')){
-			obj.removeClass('single-service-big');
-		} else {
-			obj.addClass('single-service-big');
-		}
+		var dis = $(this);
+		var obj = dis.parent().parent();
+		var cod = dis.attr('data-codigo');
+		var tip = dis.attr('data-tipo');
+
+		$.ajax({
+			url: 'areaatuacao/gettexto',
+			type: 'POST',
+			data: {
+				id: cod,
+				tipo: tip
+			},
+			success: function(data){
+				if(obj.hasClass('single-service-big')){
+					obj.attr('class', 'single-service');
+					$('#single-service-body-'+cod).css('height', '200px');
+					dis.attr('data-tipo', '0');
+				} else {
+					obj.attr('class', 'single-service-big');
+					$('#single-service-body-'+cod).css('height', '310px');
+					dis.attr('data-tipo', '1');
+				}
+
+				$('#single-service-body-'+cod).html(data);
+			}
+		});
 	});
 });
 

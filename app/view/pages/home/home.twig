@@ -117,10 +117,26 @@
         });
 
         $('.ulGrupo li').click(function(){
-            $('.ulGrupo li').addClass('grupoHide');
-            $(this).removeClass('grupoHide');
-            $('.grupoHide').fadeOut('slow');
-            $(this).animate({left: '0px'});
+            var userId = $(this).attr('user-id');
+            $('.ulGrupo').children('li').each(function(){
+                var left = $(this).offset().left;
+                var val = left - (left * 2);
+                $(this).css('z-index', 1).animate({left: val});
+            });
+            var left = $(this).offset().left;
+            var val = left - (left * 2);
+            $(this).css('z-index', 2).animate({left: val});
+            $('#divGrupoConteudoCorpo').animate({opacity: 'toggle'});
+            $.ajax({
+                url: "{{ RAIZ }}grupo-detalhe/"+userId,
+                beforeSend: function(){
+                    $('#divGrupoConteudoCorpo').html("");
+                },
+                success: function (data) {
+                    $('#divGrupoConteudoCorpo').html(data);
+                }
+            });
+
         });
 
         $('.divGrupo2 div').click(function(){

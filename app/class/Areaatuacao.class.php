@@ -75,6 +75,16 @@ DML;
         $this->con->post('/', function(Request $request) use($app){
             $req = $request->request->all();
 
+            if(strlen($req['texto']) > 500) {
+                echo <<<SCRIPT
+                    <script>
+                        alert('O campo "texto" deve conter até 500 caractéres.');
+                    </script>
+SCRIPT;
+                return false;
+
+            }
+
             if(empty($req['id'])) {
                 $this->insertAreaAtuacao($req, $app);
                 $app['session']->set('ERRO', array(
@@ -109,7 +119,7 @@ DML;
 
             return 'Area de atuação apagada com sucesso';
         });
-
+        
         return $this->con;
     }
 

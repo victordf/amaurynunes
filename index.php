@@ -131,6 +131,28 @@ $app->mount('admin/escritorio', new \App\EscritorioServiceProvider());
 $app->mount('admin/areaatuacao', new \App\AreaatuacaoServiceProvider());
 $app->mount('admin/nossotime', new \App\NossotimeServiceProvider());
 
+$app->post('areaatuacao/gettexto', function(Request $request) use($app){
+    $req = $request->request->all();
+    if($req['tipo'] == 0) {
+        $sql = "select texto from areaatuacao where id = {$req['id']}";
+    } else {
+        $sql = "select concat(SUBSTRING(texto, 1, 247), '...') texto from areaatuacao where id = {$req['id']}";
+    }
+    $tex = $app['db']->fetchAll($sql)[0]['texto'];
+    return '<p>'.$tex.'</p>';
+});
+
+$app->get('grupo-detalhe/{id}', function($id) use($app){
+    $sql = <<<SQL
+      select nome, funcao, resumo from nossotime where id = {$id}
+SQL;
+    $usuario = $app['db']->fetchAll($sql)[0];
+
+    return $app['twig']->render('pages/home/sections/grupo-detalhe.twig', [
+        'usuario' => $usuario
+    ]);
+});
+
 $app->get('/', function() use($app){
     $sql = "select bcrimg, bcrtitulo, bcrprincipal, bcrsubtitulo, bcrtembotao, bcrtxtbotao, bcrfuncbotao from carrossel";
     $bcr = $app['db']->fetchAll($sql);
@@ -192,7 +214,7 @@ SQL;
         select
             id,
             titulo,
-            texto
+            concat(SUBSTRING(texto, 1, 247), '...') texto
         from areaatuacao
         where status = 'A'
 DML;
