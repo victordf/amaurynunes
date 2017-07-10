@@ -17,7 +17,7 @@
             float: left !important;
             padding: 6px 12px !important;
         }
-        
+
         .table th {
             text-align: center;
         }
@@ -40,7 +40,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="well col-lg-8 col-lg-offset-2 col-sm-8 col-sm-offset-2">
-                <form method="post" action="{{ RAIZ }}admin/nossotime/" class="form-horizontal" id="form-artigos" enctype="multipart/form-data">
+                <form method="post" id="formTime" action="{{ RAIZ }}admin/nossotime/" class="form-horizontal" id="form-artigos" enctype="multipart/form-data">
                     <input type="hidden" id="id" name="id" value="{{ nossotime.id }}">
 
                     <div class="form-group">
@@ -58,21 +58,28 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="" class="col-lg-2 control-label">Resumo:</label>
+                        <label for="" class="col-lg-2 control-label">Email:</label>
                         <div class="col-lg-10">
-                            <textarea name="resumo" id="resumo" cols="30" rows="10" class="form-control" maxlength="5000">{{ nossotime.resumo }}</textarea>
+                            <input type="text" class="form-control" name="email" id="email" value="{{ nossotime.email }}">
                         </div>
                     </div>
+
+                    {#<div class="form-group">#}
+                    {#<label for="" class="col-lg-2 control-label">Resumo:</label>#}
+                    {#<div class="col-lg-10">#}
+                    {#<textarea name="resumo" id="resumo" cols="30" rows="10" class="form-control" maxlength="5000">{{ nossotime.resumo }}</textarea>#}
+                    {#</div>#}
+                    {#</div>#}
 
                     <div class="form-group">
                         <label for="" class="col-lg-2 control-label">Currículo</label>
                         <div class="col-lg-10">
-                            <textarea name="curriculo" id="curriculo" cols="30" rows="10" class="form-control">{{ nossotime.curriculo }}</textarea>
+                            <textarea name="curriculo" id="curriculo" cols="30" rows="10" class="form-control editor" maxlength="5000">{{ nossotime.curriculo }}</textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="" class="col-lg-2 control-label">Currículo Lotes</label>
+                        <label for="" class="col-lg-2 control-label">Currículo Lattes</label>
                         <div class="col-lg-10">
                             <input type="text" name="curriculolotes" id="curriculolotes" class="form-control" value="{{ nossotime.curriculolotes }}">
                         </div>
@@ -122,7 +129,7 @@
                     <tr>
                         <td>
                             <button onclick="editarTime({{ time.id }})" class="btn btn-success"><i class="fa fa-pencil-square-o"></i></button>
-                            <button onclick="deletaTime({{ time.id }})" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            {#<button onclick="deletaTime({{ time.id }})" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>#}
                         </td>
                         <td>{{ time.nome }}</td>
                         <td>{{ time.funcao }}</td>
@@ -137,38 +144,43 @@
 {% block jsCode %}
     <script>
         $(document).ready(function(){
-
+            $('#formTime').on('submit', function(){
+                if ($('#curriculo').val().length > 5000) {
+                    swal('O campo "Currículo" não pode conter mais que 500 caracteres.', '', 'error');
+                    return false;
+                }
+            });
         });
-        
+
         function editarTime(id){
             window.location.href = "{{ RAIZ }}admin/nossotime/"+id;
         }
-        
+
         function deletaTime(id){
             swal({
-                title: 'Tem certeza?',
-                text: 'Deseja apagar este membro?',
-                showCancelButton: true,
-                confirmButtonClass: "btn-success",
-                confirmButtonText: 'Sim',
-                cancelButtonText: 'Não',
-                closeOnConfirm: false
-            },
-            function(isConfirm){
-                if(isConfirm){
-                    $.ajax({
-                        url: "{{ RAIZ }}admin/nossotime/delete",
-                        type: "POST",
-                        data: {
-                            id: id
-                        },
-                        success: function(data){
-                            swal(data, '', 'success');
-                            window.location.reload();
+                        title: 'Tem certeza?',
+                        text: 'Deseja apagar este membro?',
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: 'Sim',
+                        cancelButtonText: 'Não',
+                        closeOnConfirm: false
+                    },
+                    function(isConfirm){
+                        if(isConfirm){
+                            $.ajax({
+                                url: "{{ RAIZ }}admin/nossotime/delete",
+                                type: "POST",
+                                data: {
+                                    id: id
+                                },
+                                success: function(data){
+                                    swal(data, '', 'success');
+                                    window.location.reload();
+                                }
+                            });
                         }
                     });
-                }
-            });
         }
     </script>
 {% endblock %}

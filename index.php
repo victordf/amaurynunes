@@ -144,14 +144,59 @@ $app->post('areaatuacao/gettexto', function(Request $request) use($app){
 
 $app->get('grupo-detalhe/{id}', function($id) use($app){
     $sql = <<<SQL
-      select nome, funcao, resumo from nossotime where id = {$id}
+      select id, nome, funcao, resumo, curriculo, curriculolotes, email from nossotime where id = {$id}
 SQL;
     $usuario = $app['db']->fetchAll($sql)[0];
 
+    $sql = <<<SQL
+                SELECT
+                  nome,
+                  imagem
+                from idiomatime idt
+                inner join idioma idi on idt.ididioma = idi.id
+                where idtime = {$id}
+                order by nome
+SQL;
+    $idiomas = $app['db']->fetchAll($sql);
+
     return $app['twig']->render('pages/home/sections/grupo-detalhe.twig', [
-        'usuario' => $usuario
+        'usuario' => $usuario,
+        'idiomas' => $idiomas
     ]);
 });
+
+$app->get('nossotime/curriculo/{id}', function($id) use($app){
+    $sql = <<<SQL
+                select
+                  id,
+                  nome,
+                  funcao,
+                  resumo,
+                  curriculo,
+                  foto,
+                  curriculolotes
+                from nossotime
+                where id = {$id}
+SQL;
+    $time = $app['db']->fetchAll($sql)[0];
+
+    $sql = <<<SQL
+                SELECT
+                  nome,
+                  imagem
+                from idiomatime idt
+                inner join idioma idi on idt.ididioma = idi.id
+                where idtime = {$id}
+                order by nome
+SQL;
+    $idiomas = $app['db']->fetchAll($sql);
+
+    return $app['twig']->render('pages/home/curriculo.twig', [
+        'dados' => $time,
+        'idiomas' => $idiomas
+    ]);
+});
+
 
 $app->get('/', function() use($app){
     $sql = "select bcrimg, bcrtitulo, bcrprincipal, bcrsubtitulo, bcrtembotao, bcrtxtbotao, bcrfuncbotao from carrossel";
@@ -202,7 +247,8 @@ DML;
             funcao,
             resumo,
             curriculo,
-            foto
+            foto,
+            curriculolotes
         from nossotime
         where status = 'A'
 SQL;
@@ -263,7 +309,7 @@ $app->get('artigo/{id}', function($id) use($app){
 DML;
     $res = $app['db']->fetchAll($sql)[0];
     $app['twig']->addGlobal('TITLEFB', "ARTIGO: ".$res['titulo']);
-    define('TITLEFB', "ARTIGO: ".$res['titulo']);
+//    define('TITLEFB', "ARTIGO: ".$res['titulo']);
     return $app['twig']->render('pages/home/artigo.twig', [
         'artigo' => [
             'titulo' => $res['titulo'],
@@ -960,10 +1006,26 @@ $app->post('email', function(Request $request) use($app, $email){
 //    $email->addEmailTo(array('Victor Martins' => 'victor@bsvsolucoes.com.br'));
 
     $email->setEmailFrom();
+    $email->setFormato(true);
     $email->addEmailTo(['Contato' => Email::sisEmail]);
 
     $assunto = $req['subject'];
-    $corpo = $req['mensagem'];
+    $corpo = <<<HTML
+        <table>
+            <tr>
+                <td>Nome</td>
+                <td>{$req['name']}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{$req['email']}</td>
+            </tr>
+            <tr>
+                <td>Mensagem</td>
+                <td>{$req['message']}</td>
+            </tr>
+        </table>
+HTML;
 
     if(!$email->send($assunto, $corpo)){
         return $email->error;

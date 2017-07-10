@@ -119,7 +119,7 @@ SCRIPT;
 
             return 'Area de atuação apagada com sucesso';
         });
-        
+
         return $this->con;
     }
 

@@ -28,9 +28,9 @@
             display: none;
         }
 
-        #contact {
-            height: 880px;
-        }
+        /*#contact {*/
+            /*height: 880px;*/
+        /*}*/
 
         .margin-20-top{
             margin-top: 20px;
@@ -38,6 +38,25 @@
         .margin-20-bottom{
             margin-bottom: 20px;
         }
+
+        @media screen and (min-width: 770px) {
+            #our-team-mobile {
+                display: none;
+            }
+            #liTeamMobile {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 770px) {
+            #our-team {
+                display: none;
+            }
+            #liTeamWeb {
+                display: none;
+            }
+        }
+
     </style>
 {% endblock %}
 
@@ -53,10 +72,11 @@
                 </div>
                 <div class="collapse navbar-collapse" id="navbar-topo">
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="scroll active"><a href="#navigation">Home</a></li>
+                        <li class="scroll active"><a href="#home">Home</a></li>
                         <li class="scroll"><a href="#sobre">Escritório</a></li>
                         <li class="scroll"><a href="#areas-atuacao">Áreas de atuação</a></li>
-                        <li class="scroll"><a href="#our-team">Advogados</a></li>
+                        <li class="scroll" id="liTeamMobile"><a href="#our-team-mobile">Equipe</a></li>
+                        <li class="scroll" id="liTeamWeb"><a href="#our-team">Equipe</a></li>
                         <li class="scroll"><a href="#blog">Artigos</a></li>
                         <li class="scroll"><a href="#contact">Contato</a></li>
                     </ul>
@@ -77,8 +97,6 @@
 
     {% include 'pages/home/sections/artigos.twig' %}
 
-    {% include 'pages/home/sections/mapa.twig' %}
-
     {% include 'pages/home/sections/contato.twig' %}
 
 {% endblock %}
@@ -89,7 +107,9 @@
             alert('teste');
         });
 
-
+        function abreCurriculo(id){
+            window.open("{{ RAIZ }}nossotime/curriculo/"+id, "_blank");
+        }
 
         $('#btn-send-contato').click(function(){
             var nome = $('input[name=name]').val();

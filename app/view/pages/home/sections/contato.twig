@@ -1,4 +1,7 @@
 <section id="contact">
+
+    {% include 'pages/home/sections/mapa.twig' %}
+
     <div class="col-sm-12 text-center topo-section">
         <h1 class="title-one">Fale conosco</h1>
     </div>
@@ -10,8 +13,7 @@
                     <div class="contact-address">
                         <address>
                             <p>
-                            <span>Amaury Nunes<br>
-                            &<br>
+                            <span>Amaury Nunes &<br>
                             Advogados Associados</span>
                             </p>
                             <strong>SAUS Quadra 4, Lotes 9/10
@@ -30,7 +32,7 @@
                 <div class="col-sm-6">
                     <div id="contact-form-section">
                         <div class="status alert alert-success" style="display: none"></div>
-                        <form id="contact-form" class="contact" name="contact-form" method="get" action="{{ RAIZ }}">
+                        <form id="contact-form" class="contact" name="contact-form" method="post" action="{{ RAIZ }}email">
                             <div class="form-group">
                                 <input type="text" name="name" class="form-control name-field" required placeholder="Nome"></div>
                             <div class="form-group">

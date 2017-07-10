@@ -29,7 +29,7 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
 
             $idms = $this->getArrayIdioma();
             $not  = $this->getArrayNossoTime();
-            
+
             return $app['twig']->render('admin/pages/time/cadastro.twig', [
                 'token'         => $token,
                 'loged'         => $loged,
@@ -42,7 +42,8 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
                     'resumo' => '',
                     'curriculo' => '',
                     'curriculolotes' => '',
-                    'foto' => ''
+                    'foto' => '',
+                    'email' => ''
                 ],
                 'tabela'        => $not,
                 'MENU' => 'nossotime'
@@ -67,10 +68,10 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
                 'MENU' => 'nossotime'
             ]);
         });
-        
+
         $this->con->post('/', function(Request $request) use($app){
             $req  = $request->request->all();
-            $file = $request->files->get('foto');
+//            $file = $request->files->get('foto');
 //            $fle =  $request->files->get('imagem');
 
             $id             = $req['id'];
@@ -81,14 +82,15 @@ class NossotimeServiceProvider implements ControllerProviderInterface{
             $curriculolotes = $req['curriculolotes'];
             $idiomas        = $req['idioma'];
             $arquivo        = '';
+            $email          = $req['email'];
 
             if (!empty($id)) {
                 $sql = <<<SQL
                     update nossotime set
                         nome = '{$nome}',
                         funcao = '{$funcao}',
-                        resumo = '{$resumo}',
                         curriculo = '{$curriculo}',
+                        email = '{$email}',
                         curriculolotes = '{$curriculolotes}'
                     where id = {$id}
 SQL;
@@ -96,13 +98,13 @@ SQL;
             } else {
 
                 $sql = <<<SQL
-                    insert into nossotime (nome, funcao, resumo, curriculo, curriculolotes, foto) values (
+                    insert into nossotime (nome, funcao, curriculo, curriculolotes, foto, email) values (
                         '{$nome}',
                         '{$funcao}',
-                        '{$resumo}',
                         '{$curriculo}',
                         '{$curriculolotes}',
-                        '{$arquivo}'
+                        '{$arquivo}',
+                        '{$email}'
                     );
 SQL;
                 $app['db']->exec($sql);
@@ -110,29 +112,29 @@ SQL;
             }
 
 
-            if(!empty($file)){
-                $fotoExtesao = $file->getClientOriginalExtension();
-                $dir      = RAIZ . 'web/images/time/';
-                $dirF     = DIR . '/web/images/time/';
-                $arquivo  = $dir . 'foto_time_'.$id.'.'.$fotoExtesao;
-                $arquivoF = $dirF . 'foto_time_'.$id.'.'.$fotoExtesao;
-
-                if (is_writable($dirF)) {
-                    if(file_exists($arquivoF)){
-                        unlink($arquivoF);
-                    }
-                    move_uploaded_file($file->getPathname(), $arquivoF);
-                } else {
-                    throw new Exception('Diretório inválido');
-                }
-
-                $sql = <<<SQL
-                    update nossotime set
-                        foto = '{$arquivo}'
-                    where id = {$id}
-SQL;
-                $app['db']->exec($sql);
-            }
+//            if(!empty($file)){
+//                $fotoExtesao = $file->getClientOriginalExtension();
+//                $dir      = RAIZ . 'web/images/time/';
+//                $dirF     = DIR . '/web/images/time/';
+//                $arquivo  = $dir . 'foto_time_'.$id.'.'.$fotoExtesao;
+//                $arquivoF = $dirF . 'foto_time_'.$id.'.'.$fotoExtesao;
+//
+//                if (is_writable($dirF)) {
+//                    if(file_exists($arquivoF)){
+//                        unlink($arquivoF);
+//                    }
+//                    move_uploaded_file($file->getPathname(), $arquivoF);
+//                } else {
+//                    throw new Exception('Diretório inválido');
+//                }
+//
+//                $sql = <<<SQL
+//                    update nossotime set
+//                        foto = '{$arquivo}'
+//                    where id = {$id}
+//SQL;
+//                $app['db']->exec($sql);
+//            }
 
 
             if(is_array($idiomas)){
@@ -186,7 +188,8 @@ SQL;
                   resumo,
                   curriculo,
                   foto,
-                  curriculolotes
+                  curriculolotes,
+                  email
                 from nossotime
                 where id = {$id}
 SQL;
@@ -211,16 +214,16 @@ SQL;
 
         return $this->con;
     }
-    
+
     /**
      * Função que retorna um array com os idiomas
-     * 
+     *
      * @param type $id - Parâmetro que filtra os idiomas pelo id
      * @param type $idtime - Parâmetro que filtra os idiomas pelo id do time
      * @param Array $opcoes - Parâmetro que recebe as condições do SQL. Exemplo:
      *      - ["nome = 'teste'"]
      *      - ["tipo = 123", "nome = 'teste'"]
-     * 
+     *
      * @return Array
      */
     public function getArrayIdioma($id = null, $idtime = null, $opcoes = []){
@@ -246,10 +249,10 @@ SQL;
 SQL;
         return $this->app['db']->fetchAll($sql);
     }
-    
+
     /**
      * Função que retorna um array com as informações dos membros do time
-     * 
+     *
      * @param type $id - Parâmetro que recebe o ID do time
      * @param array $opcoes - Parâmetro que recebe as condições do SQL. Exemplo:
      *      - ["nome = 'teste'"]
@@ -267,7 +270,8 @@ SQL;
                 resumo,
                 curriculo,
                 curriculolotes,
-                foto
+                foto,
+                email
             from nossotime
             where 1=1
             {$where}

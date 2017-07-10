@@ -33,73 +33,73 @@
 </head><!--/head-->
 {#<body data-spy="scroll" data-target="#navbar-topo">#}
 <body>
-    <div class="preloader">
-        <div class="preloder-wrap">
-            <div class="preloder-inner">
-                <div class="ball"></div>
-                <div class="ball"></div>
-                <div class="ball"></div>
-                <div class="ball"></div>
-                <div class="ball"></div>
-                <div class="ball"></div>
-                <div class="ball"></div>
-            </div>
+<div class="preloader">
+    <div class="preloder-wrap">
+        <div class="preloder-inner">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
         </div>
-    </div><!--/.preloader-->
-
-    <div class="principal">
-        {% block body %}{% endblock %}
     </div>
+</div><!--/.preloader-->
 
-    <footer id="footer">
-        <div class="container">
-            <div class="text-center">
-                <p>Copyright &copy; 2016 - Feito pela BSV Soluções</p>
-            </div>
+<div class="principal">
+    {% block body %}{% endblock %}
+</div>
+
+<footer id="footer">
+    <div class="container">
+        <div class="text-center">
+            <p>Copyright &copy; 2017 - Feito pela ORBIS Tecnologia</p>
         </div>
-    </footer> <!--/#footer-->
+    </div>
+</footer> <!--/#footer-->
 
-    <script type="text/javascript" src="{{ RAIZ }}web/js/jquery.js"></script>
-    <script type="text/javascript" src="{{ RAIZ }}web/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{{ RAIZ }}web/js/smoothscroll.js"></script>
-    <script type="text/javascript" src="{{ RAIZ }}web/js/jquery.isotope.min.js"></script>
-    <script type="text/javascript" src="{{ RAIZ }}web/js/jquery.prettyPhoto.js"></script>
-    <script type="text/javascript" src="{{ RAIZ }}web/js/jquery.parallax.js"></script>
-    <script type="text/javascript" src="{{ RAIZ }}web/js/main.js"></script>
-    <script type='text/javascript' src='{{ RAIZ }}web/js/sweetalert/sweetalert.min.js'></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/smoothscroll.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/jquery.parallax.js"></script>
+<script type="text/javascript" src="{{ RAIZ }}web/js/main.js"></script>
+<script type='text/javascript' src='{{ RAIZ }}web/js/sweetalert/sweetalert.min.js'></script>
 
 
-    <script>
-        function validaForm(form){
-            $("#"+form+" [required]").each(function(){
-                var campo = $(this);
-                var valor = campo.val();
-                switch (campo.attr('type')){
-                    default:
-                    case 'text':
-                        if(valor == ''){
-                            swal('O campo \''+campo.attr('name')+'\' é obrigatório.');
-                            return false;
-                        }
-                        break;
+<script>
+    function validaForm(form){
+        $("#"+form+" [required]").each(function(){
+            var campo = $(this);
+            var valor = campo.val();
+            switch (campo.attr('type')){
+                default:
+                case 'text':
+                    if(valor == ''){
+                        swal('O campo \''+campo.attr('name')+'\' é obrigatório.');
+                        return false;
+                    }
+                    break;
 
-                    case 'email':
-                        if(valor.indexOf('@') == -1){
-                            swal('Email inválido.');
-                            return false;
-                        }
-                        if(valor == ''){
-                            swal('O campo '+campo.attr('name')+' é obrigatório.');
-                            return false;
-                        }
-                        break;
+                case 'email':
+                    if(valor.indexOf('@') == -1){
+                        swal('Email inválido.');
+                        return false;
+                    }
+                    if(valor == ''){
+                        swal('O campo '+campo.attr('name')+' é obrigatório.');
+                        return false;
+                    }
+                    break;
 
-                }
-            });
-            return true;
-        }
-    </script>
+            }
+        });
+        return true;
+    }
+</script>
 
-    {% block jsInclude %}{% endblock %}
-    {% block jsCode %}{% endblock %}
+{% block jsInclude %}{% endblock %}
+{% block jsCode %}{% endblock %}
 </body>

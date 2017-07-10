@@ -1,24 +1,24 @@
-<section id="our-team">
+<section id="our-team-mobile">
     <div class="col-sm-12 text-center topo-section">
         <h1 class="title-one">Equipe</h1>
     </div>
     <div class="container">
         <div id="team-carousel" class="carousel slide" data-interval="false">
-            <a class="member-left" href="#team-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-            <a class="member-right" href="#team-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            {#<a class="member-left" href="#team-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>#}
+            {#<a class="member-right" href="#team-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>#}
             <div class="carousel-inner team-members">
 
                 {% for time in nossotime %}
-                    {% if cont == 5 %}
-                        {% set cont = 0 %}
-                        <div class="row item active">
+                {% if cont == 5 %}
+                {% set cont = 0 %}
+                <div class="row item active">
                     {% endif %}
 
-                    {% if cont == 4 %}
-                        {% set cont = 0 %}
-                        </div>
-                        <div class="row item">
-                    {% endif %}
+                    {#{% if cont == 4 %}#}
+                    {#{% set cont = 0 %}#}
+                    {#</div>#}
+                    {#<div class="row item">#}
+                    {#{% endif %}#}
 
                     <div class="col-sm-6 col-md-3">
                         <div class="single-member">
@@ -27,21 +27,22 @@
                             <h5>{{ time.funcao }}</h5>
                             <p></p>
                             <div class="socials text-center">
-                                <input type="button" class="btn btn-success" value="CURRÍCULO" onclick="abreCurriculo({{ time.id }})">
+                                <a href="{{ time.curriculolotes }}" target="_blank" title="Currículo Lattes"><i class="fa fa-file-text-o fa-3" aria-hidden="true"></i></a>
+                                {#<input type="button" class="btn btn-success" value="CURRÍCULO" onclick="abreCurriculo({{ time.id }})">#}
                             </div>
                         </div>
                     </div>
 
                     {% set cont = cont + 1 %}
-                {% endfor %}
+                    {% endfor %}
 
+                </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        function abreCurriculo(id){
-            window.open("{{ RAIZ }}admin/nossotime/curriculo/"+id, "_blank");
-        }
-    </script>
+        <script>
+            function abreCurriculo(id){
+                window.open("{{ RAIZ }}admin/nossotime/curriculo/"+id, "_blank");
+            }
+        </script>
 </section>

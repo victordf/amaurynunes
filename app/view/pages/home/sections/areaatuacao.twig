@@ -15,38 +15,38 @@
                         {% set contador = 1 %}
                         {% set i = 0 %}
 
-                        <div class="col-lg-12">
+                        <div class="col-sm-12 col-lg-12">
 
                             {% for area in areas %}
 
-                                {#<div class="col-sm-4 single-service-parent" style="left: {{ largura }}px; top: {{ altura }}px;">#}
-                                <div class="col-sm-4 single-service-parent">
-                                    <div class="single-service">
-                                        <div class="single-service-title">
-                                            <h2>{{ area.titulo }}</h2>
-                                        </div>
-                                        <div class="single-service-body" id="single-service-body-{{ area.id }}">
-                                            <p>{{ area.texto }}</p>
-                                        </div>
-                                        <div class="single-service-action">
-                                            <input type="button" class="btn btn-primary btn-single-service" data-codigo="{{ area.id }}" data-tipo="0" value="Leia mais">
-                                        </div>
+                            {#<div class="col-sm-4 single-service-parent" style="left: {{ largura }}px; top: {{ altura }}px;">#}
+                            <div class="col-sm-6 col-md-4 single-service-parent">
+                                <div class="single-service">
+                                    <div class="single-service-title">
+                                        <h2>{{ area.titulo }}</h2>
+                                    </div>
+                                    <div class="single-service-body" id="single-service-body-{{ area.id }}">
+                                        <p>{{ area.texto }}</p>
+                                    </div>
+                                    <div class="single-service-action">
+                                        <input type="button" class="btn btn-primary btn-single-service" data-codigo="{{ area.id }}" data-tipo="0" value="Leia mais">
                                     </div>
                                 </div>
+                            </div>
 
-                                {% set largura = largura + cLargura + 20 %}
-                                {% if contador >= 3 %}
-                                    </div>
-                                    <div class="col-lg-12">
+                            {% set largura = largura + cLargura + 20 %}
+                            {% if contador >= 3 %}
+                        </div>
+                        <div class="col-lg-12">
 
-                                    {% set contador = 1 %}
-                                    {% set largura = 0 %}
-                                    {% set altura = altura + cAltura + 10 %}
-                                {% else %}
-                                    {% set contador = contador + 1 %}
-                                {% endif %}
+                            {% set contador = 1 %}
+                            {% set largura = 0 %}
+                            {% set altura = altura + cAltura + 10 %}
+                            {% else %}
+                                {% set contador = contador + 1 %}
+                            {% endif %}
 
-                                {% set i = i + 1 %}
+                            {% set i = i + 1 %}
 
                             {% endfor %}
 
